@@ -13,8 +13,8 @@
         <appender-ref ref="Console" />
     </root>
 
-    <!-- LOG "br.com.exemplo*" at TRACE level -->
-    <logger name="br.com.exemplo.chatboteouvteste" level="trace" additivity="false">
+    <!-- LOG "br.gov.cgu.*" at TRACE level -->
+    <logger name="br.gov.cgu.chatboteouvteste" level="trace" additivity="false">
         <appender-ref ref="Console" />
     </logger>
 </configuration>

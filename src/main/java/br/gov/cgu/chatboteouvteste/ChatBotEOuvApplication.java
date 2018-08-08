@@ -1,4 +1,4 @@
-package br.com.exemplo.chatboteouvteste;
+package br.gov.cgu.chatboteouvteste;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -17,3 +17,4 @@ public class ChatBotEOuvApplication {
         return null;
     }
 }
+

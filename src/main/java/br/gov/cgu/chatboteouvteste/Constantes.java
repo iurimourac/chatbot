@@ -1,4 +1,4 @@
-package br.com.exemplo.chatboteouvteste;
+package br.gov.cgu.chatboteouvteste;
 
 public final class Constantes {
 
