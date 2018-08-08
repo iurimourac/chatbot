@@ -38,6 +38,7 @@ public class ApiChatbotController {
     @RequestMapping(value = "/webhook", method = RequestMethod.POST)
     public ResponseEntity<String> tratarMensagem(@RequestBody String mensagem) {
         logger.info("[INFO] Mensagem recebida com sucesso!!!");
+        logger.info("[INFO] Conteúdo da mensagem: {}.", mensagem);
         return new ResponseEntity<>("SUCESSO", HttpStatus.OK);
     }
 
