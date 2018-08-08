@@ -2,7 +2,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>br.gov.cgu</groupId>
+    <groupId>br.com.exemplo</groupId>
     <artifactId>chatbot-e-ouv</artifactId>
     <name>chatbot-e-ouv</name>
     <description>ChatBot do e-Ouv para integração com Facebook</description>

@@ -1,6 +1,6 @@
-package chatboteouvteste.web;
+package br.com.exemplo.chatboteouvteste.web;
 
-import chatboteouvteste.Constantes;
+import br.com.exemplo.chatboteouvteste.Constantes;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

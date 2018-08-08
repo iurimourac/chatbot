@@ -1,4 +1,4 @@
-package chatboteouvteste;
+package br.com.exemplo.chatboteouvteste;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
