@@ -24,7 +24,6 @@ public class ApiChatbotController {
                                             @RequestParam(value = "hub.challenge") String challenge) {
         if (isNotEmpty(mode) && isNotEmpty(token)) {
             if (mode.equals(Constantes.MODO_SUBSCRIBE) && token.equals(tokenWebhook)) {
-                System.out.println("[INFO] Autenticação com sucesso!!!");
                 logger.info("[INFO] Autenticação com sucesso!!!");
                 return new ResponseEntity<>(challenge, HttpStatus.OK);
             } else {
