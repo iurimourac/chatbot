@@ -3,6 +3,7 @@ package br.gov.cgu.chatboteouvteste.aplicacao;
 import br.gov.cgu.chatboteouvteste.negocio.MensagemInvalidaException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
@@ -13,12 +14,19 @@ import static br.gov.cgu.chatboteouvteste.Constantes.OBJETO_PAGINA;
 @Service
 public class GerenciadorDeMensagem {
 
+    private IntegracaoFacebookService facebookService;
+
+    @Autowired
+    public GerenciadorDeMensagem(IntegracaoFacebookService facebookService) {
+        this.facebookService = facebookService;
+    }
+
     public void tratarMensagem(String mensagem) {
         ObjectMapper mapper = new ObjectMapper();
         try {
             RequisicaoMensagemDTO requisicaoMensagemDTO = mapper.readValue(mensagem, RequisicaoMensagemDTO.class);
             validarMensagem(requisicaoMensagemDTO);
-            EventoMensagemDTO evento = requisicaoMensagemDTO.getEvento();
+            facebookService.enviarMensagem(requisicaoMensagemDTO);
         } catch (IOException e) {
             throw new MensagemInvalidaException();
         }

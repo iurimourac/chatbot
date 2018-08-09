@@ -16,8 +16,8 @@ import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 @RestController
 public class GerenciarMensagemController {
 
-    @Value("${webhook.token}")
-    private String tokenWebhook;
+    @Value("${page.access.token}")
+    private String accessToken;
 
     private final Logger logger = LoggerFactory.getLogger(GerenciarMensagemController.class);
 
@@ -33,7 +33,7 @@ public class GerenciarMensagemController {
                                             @RequestParam(value = "hub.verify_token") String token,
                                             @RequestParam(value = "hub.challenge") String challenge) {
         if (isNotEmpty(mode) && isNotEmpty(token)) {
-            if (mode.equals(Constantes.MODO_SUBSCRIBE) && token.equals(tokenWebhook)) {
+            if (mode.equals(Constantes.MODO_SUBSCRIBE) && token.equals(accessToken)) {
                 logger.info("Autenticação com sucesso!!!");
                 return new ResponseEntity<>(challenge, HttpStatus.OK);
             } else {

@@ -11,6 +11,7 @@ public final class Constantes {
     public static final String CAMPO_SENDER_MENSAGEM = "sender";
     public static final String CAMPO_TIMESTAMP_MENSAGEM = "timestamp";
     public static final String CAMPO_MESSAGE_MENSAGEM = "message";
+    public static final String CAMPO_TEXTO_MENSAGEM = "text";
     public static final String CAMPO_POSTBACK_MENSAGEM = "postback";
 
 }

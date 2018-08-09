@@ -8,6 +8,7 @@ import java.util.Map;
 
 import static br.gov.cgu.chatboteouvteste.Constantes.CAMPO_EVENTO_MENSAGEM;
 import static br.gov.cgu.chatboteouvteste.Constantes.CAMPO_ID_MENSAGEM;
+import static br.gov.cgu.chatboteouvteste.Constantes.CAMPO_TEXTO_MENSAGEM;
 
 public class RequisicaoMensagemDTO {
 
@@ -43,5 +44,9 @@ public class RequisicaoMensagemDTO {
 
     public String getSenderId() {
         return (String) getEvento().getSender().get(CAMPO_ID_MENSAGEM);
+    }
+
+    public String getTextoMensagem() {
+        return (String) getEvento().getMessage().get(CAMPO_TEXTO_MENSAGEM);
     }
 }
