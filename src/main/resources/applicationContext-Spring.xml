@@ -7,11 +7,7 @@
 					    http://www.springframework.org/schema/task
 					    http://www.springframework.org/schema/task/spring-task.xsd">
 
-	<bean id="restTemplate" class="org.springframework.web.client.RestTemplate" >
-		<property name="errorHandler">
-			<bean class="br.gov.cgu.chatboteouvteste.aplicacao.RestTemplateErrorHandler" />
-		</property>
-	</bean>
+	<bean id="restTemplate" class="org.springframework.web.client.RestTemplate" />
 
 	<task:annotation-driven />
 </beans>
