@@ -1,5 +1,7 @@
 package br.gov.cgu.chatboteouvteste.aplicacao;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
@@ -16,6 +18,8 @@ public class IntegracaoFacebookService {
     @Value("${page.access.token}")
     private String accessToken;
 
+    private final Logger logger = LoggerFactory.getLogger(IntegracaoFacebookService.class);
+
     private RestTemplate restTemplate;
 
     @Autowired
@@ -25,8 +29,10 @@ public class IntegracaoFacebookService {
 
     public ResponseEntity<String> enviarMensagem(RequisicaoMensagemDTO mensagemDTO, String conteudoMensagem) {
         UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(urlFacebook).queryParam("access_token", accessToken);
-        HttpEntity<String> entity = new HttpEntity<>(montarMensagem(mensagemDTO, conteudoMensagem), getHeaders());
+        String mensagem = montarMensagem(mensagemDTO, conteudoMensagem);
+        HttpEntity<String> entity = new HttpEntity<>(mensagem, getHeaders());
 
+        logger.info("Mensagem de resposta: {}", mensagem);
         return restTemplate.exchange(builder.build().encode().toUri(), HttpMethod.POST, entity, String.class);
     }
 
