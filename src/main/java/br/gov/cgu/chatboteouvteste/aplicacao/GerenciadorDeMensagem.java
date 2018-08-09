@@ -22,8 +22,8 @@ public class GerenciadorDeMensagem {
     }
 
     public void processarMensagem(String mensagem) {
-        ObjectMapper mapper = new ObjectMapper();
         try {
+            ObjectMapper mapper = new ObjectMapper();
             RequisicaoMensagemDTO requisicaoMensagemDTO = mapper.readValue(mensagem, RequisicaoMensagemDTO.class);
             validarMensagem(requisicaoMensagemDTO);
 
