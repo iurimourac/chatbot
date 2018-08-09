@@ -48,8 +48,7 @@ public class GerenciarMensagemController {
     @RequestMapping(value = "/webhook", method = RequestMethod.POST)
     public ResponseEntity<String> tratarMensagem(@RequestBody String mensagem) {
         try {
-            logger.info("Mensagem recebida com sucesso!!!");
-            logger.info("Conteúdo da mensagem: {}.", mensagem);
+            logger.info("Mensagem recebida com sucesso!!! Conteúdo: {}.", mensagem);
             gerenciadorDeMensagem.processarMensagem(mensagem);
 
             return new ResponseEntity<>("SUCESSO", HttpStatus.OK);

@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -35,13 +36,18 @@ public class IntegracaoFacebookService {
         this.restTemplate = restTemplate;
     }
 
-    public ResponseEntity<String> enviarMensagem(RequisicaoMensagemDTO mensagemDTO, String conteudoMensagem) {
+    public void enviarMensagem(RequisicaoMensagemDTO mensagemDTO, String conteudoMensagem) {
         UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(urlFacebook).queryParam("access_token", accessToken);
         String mensagem = montarMensagem(mensagemDTO, conteudoMensagem);
         HttpEntity<String> entity = new HttpEntity<>(mensagem, getHeaders());
 
-        logger.info("Mensagem de resposta: {}", mensagem);
-        return restTemplate.exchange(builder.build().encode().toUri(), HttpMethod.POST, entity, String.class);
+        try {
+            logger.info("Mensagem de resposta: {}", mensagem);
+            restTemplate.exchange(builder.build().encode().toUri(), HttpMethod.POST, entity, String.class);
+        } catch (RestClientException e) {
+            logger.error(e.getMessage());
+            throw new EnvioRespostaMensagemException(e.getMessage());
+        }
     }
 
     private String montarMensagem(RequisicaoMensagemDTO mensagemDTO, String conteudoMensagem) {
@@ -58,18 +64,8 @@ public class IntegracaoFacebookService {
             return mapper.writeValueAsString(respostaMensagemDTO);
         } catch (JsonProcessingException e) {
             logger.error(e.getMessage());
-            throw new RespostaMensagemException("Erro na geração de mensagem de retorno!");
+            throw new EnvioRespostaMensagemException("Erro na geração de mensagem de retorno!");
         }
-
-//        JsonNode rootNode = mapper.createObjectNode();
-//
-//        JsonNode recipient = mapper.createObjectNode()
-//
-//        StringBuilder mensagem = new StringBuilder();
-//        mensagem.append("{\"recipient\": {\"id\": \"").append(mensagemDTO.getSenderId()).append("\"}");
-//        mensagem.append(",\"message\": {\"text\": \"").append(conteudoMensagem).append("\"}");
-//        mensagem.append("}");
-//        return mensagem.toString();
     }
 
     private HttpHeaders getHeaders(){

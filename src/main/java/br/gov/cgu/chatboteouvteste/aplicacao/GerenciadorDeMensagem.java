@@ -33,7 +33,7 @@ public class GerenciadorDeMensagem {
         }
     }
 
-    //TODO Retirar método teste
+    //TODO Retirar método - somente para teste
     private String montarConteudoMensagemTeste(String textoMensagem) {
         return "Você enviou a seguinte mensagem: " + textoMensagem;
     }
