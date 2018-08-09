@@ -1,28 +1,37 @@
 package br.gov.cgu.chatboteouvteste.aplicacao;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.util.Map;
 
 public class RespostaMensagemDTO {
 
+    @JsonProperty("messaging_type")
     private TipoMensagem tipoMensagem;
-    private Map<String, Object> recipient;
-    private Map<String, Object> message;
 
-    public RespostaMensagemDTO(TipoMensagem tipoMensagem, Map<String, Object> recipient, Map<String, Object> message) {
+    @JsonProperty("recipient")
+    private Map<String, String> destinatario;
+
+    @JsonProperty("message")
+    private Map<String, String> mensagem;
+
+    @JsonCreator
+    public RespostaMensagemDTO(TipoMensagem tipoMensagem, Map<String, String> destinatario, Map<String, String> mensagem) {
         this.tipoMensagem = tipoMensagem;
-        this.recipient = recipient;
-        this.message = message;
+        this.destinatario = destinatario;
+        this.mensagem = mensagem;
     }
 
     public TipoMensagem getTipoMensagem() {
         return tipoMensagem;
     }
 
-    public Map<String, Object> getRecipient() {
-        return recipient;
+    public Map<String, String> getDestinatario() {
+        return destinatario;
     }
 
-    public Map<String, Object> getMessage() {
-        return message;
+    public Map<String, String> getMensagem() {
+        return mensagem;
     }
 }
