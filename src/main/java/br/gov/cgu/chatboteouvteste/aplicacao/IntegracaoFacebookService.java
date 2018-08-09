@@ -31,7 +31,7 @@ public class IntegracaoFacebookService {
     }
 
     private String montarMensagem(RequisicaoMensagemDTO mensagemDTO, String conteudoMensagem) {
-        StringBuilder mensagem = new StringBuilder("{");
+        StringBuilder mensagem = new StringBuilder();
         mensagem.append("{\"recipient\": {\"id\": ").append(mensagemDTO.getSenderId()).append("}");
         mensagem.append(",\"message\": {\"text\": ").append(conteudoMensagem).append("}");
         mensagem.append("}");
