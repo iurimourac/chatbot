@@ -50,7 +50,7 @@ public class GerenciarMensagemController {
         try {
             logger.info("Mensagem recebida com sucesso!!!");
             logger.info("Conteúdo da mensagem: {}.", mensagem);
-            gerenciadorDeMensagem.tratarMensagem(mensagem);
+            gerenciadorDeMensagem.processarMensagem(mensagem);
 
             return new ResponseEntity<>("SUCESSO", HttpStatus.OK);
         } catch (MensagemInvalidaException e) {

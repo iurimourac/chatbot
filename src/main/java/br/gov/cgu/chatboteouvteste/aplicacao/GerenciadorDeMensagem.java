@@ -21,15 +21,21 @@ public class GerenciadorDeMensagem {
         this.facebookService = facebookService;
     }
 
-    public void tratarMensagem(String mensagem) {
+    public void processarMensagem(String mensagem) {
         ObjectMapper mapper = new ObjectMapper();
         try {
             RequisicaoMensagemDTO requisicaoMensagemDTO = mapper.readValue(mensagem, RequisicaoMensagemDTO.class);
             validarMensagem(requisicaoMensagemDTO);
-            facebookService.enviarMensagem(requisicaoMensagemDTO);
+
+            facebookService.enviarMensagem(requisicaoMensagemDTO, montarConteudoMensagemTeste(requisicaoMensagemDTO.getTextoMensagem()));
         } catch (IOException e) {
             throw new MensagemInvalidaException();
         }
+    }
+
+    //TODO Retirar método teste
+    private String montarConteudoMensagemTeste(String textoMensagem) {
+        return "Você enviou a seguinte mensagem: " + textoMensagem;
     }
 
     private void validarMensagem(RequisicaoMensagemDTO requisicaoMensagemDTO) {

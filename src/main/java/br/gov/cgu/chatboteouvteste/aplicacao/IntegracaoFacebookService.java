@@ -23,17 +23,17 @@ public class IntegracaoFacebookService {
         this.restTemplate = restTemplate;
     }
 
-    public ResponseEntity<String> enviarMensagem(RequisicaoMensagemDTO mensagemDTO) {
+    public ResponseEntity<String> enviarMensagem(RequisicaoMensagemDTO mensagemDTO, String conteudoMensagem) {
         UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(urlFacebook).queryParam("access_token", accessToken);
-        HttpEntity<String> entity = new HttpEntity<>(montarMensagem(mensagemDTO), getHeaders());
+        HttpEntity<String> entity = new HttpEntity<>(montarMensagem(mensagemDTO, conteudoMensagem), getHeaders());
 
         return restTemplate.exchange(builder.build().encode().toUri(), HttpMethod.POST, entity, String.class);
     }
 
-    private String montarMensagem(RequisicaoMensagemDTO requisicaoMensagemDTO) {
+    private String montarMensagem(RequisicaoMensagemDTO mensagemDTO, String conteudoMensagem) {
         StringBuilder mensagem = new StringBuilder("{");
-        mensagem.append("\"recipient\": {\"id\": ").append(requisicaoMensagemDTO.getSenderId()).append("},");
-        mensagem.append("\"message\": {\"text\": ").append(requisicaoMensagemDTO.getTextoMensagem()).append("}");
+        mensagem.append("{\"recipient\": {\"id\": ").append(mensagemDTO.getSenderId()).append("}");
+        mensagem.append(",\"message\": {\"text\": ").append(conteudoMensagem).append("}");
         mensagem.append("}");
         return mensagem.toString();
     }
