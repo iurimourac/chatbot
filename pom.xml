@@ -15,7 +15,6 @@
     </parent>
 
     <properties>
-        <componentes-test.version>7.2.1</componentes-test.version>
         <kubectl.replicas>1</kubectl.replicas>
     </properties>
 
@@ -56,13 +55,6 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>br.gov.cgu</groupId>
-            <artifactId>componentes-test</artifactId>
-            <version>${componentes-test.version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
