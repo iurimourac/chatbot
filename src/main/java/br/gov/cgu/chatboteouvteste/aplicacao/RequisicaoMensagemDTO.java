@@ -6,7 +6,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static br.gov.cgu.chatboteouvteste.Constantes.*;
+import static br.gov.cgu.chatboteouvteste.Constantes.CAMPO_EVENTO_MENSAGEM;
+import static br.gov.cgu.chatboteouvteste.Constantes.CAMPO_ID_MENSAGEM;
+import static br.gov.cgu.chatboteouvteste.Constantes.CAMPO_TEXTO_MENSAGEM;
 
 public class RequisicaoMensagemDTO {
 

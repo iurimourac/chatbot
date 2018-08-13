@@ -5,4 +5,5 @@ public class EnvioRespostaMensagemException extends RuntimeException {
     public EnvioRespostaMensagemException(String erro) {
         super(erro);
     }
+
 }
