@@ -2,7 +2,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>br.com.exemplo</groupId>
+    <groupId>br.gov.cgu</groupId>
     <artifactId>chatboteouvteste</artifactId>
     <name>chatboteouvteste</name>
     <description>ChatBot do e-Ouv para integração com Facebook</description>
@@ -15,6 +15,7 @@
     </parent>
 
     <properties>
+        <componentes-test.version>7.2.1</componentes-test.version>
         <kubectl.replicas>1</kubectl.replicas>
     </properties>
 
@@ -46,6 +47,7 @@
             <version>3.7</version>
         </dependency>
 
+        <!-- Testes -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
@@ -53,9 +55,9 @@
         </dependency>
 
         <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>3.8.1</version>
+            <groupId>br.gov.cgu</groupId>
+            <artifactId>componentes-test</artifactId>
+            <version>${componentes-test.version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>

@@ -1,6 +1,6 @@
-package br.com.exemplo.chatboteouvteste.web;
+package br.gov.cgu.chatboteouvteste.web;
 
-import br.com.exemplo.chatboteouvteste.Constantes;
+import br.gov.cgu.chatboteouvteste.Constantes;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
