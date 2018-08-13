@@ -48,7 +48,7 @@ public class IntegracaoFacebookService {
         try {
             restTemplate.exchange(builder.build().encode().toUri(), HttpMethod.POST, entity, String.class);
         } catch (RestClientException e) {
-            logger.error(e.getMessage());
+            logger.error("Erro na chamada ao Facebook - Mensagem: {} / Causa: {}", e.getMessage(), e.getCause());
             throw new EnvioRespostaMensagemException(e.getMessage());
         }
     }
