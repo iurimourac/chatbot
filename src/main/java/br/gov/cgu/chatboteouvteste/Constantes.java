@@ -9,6 +9,7 @@ public final class Constantes {
     public static final String MODO_SUBSCRIBE = "subscribe";
 
     // Nome de campos das mensagens
+    public static final String CAMPO_ACCESS_TOKEN = "access_token";
     public static final String CAMPO_ID_MENSAGEM = "id";
     public static final String CAMPO_EVENTO_MENSAGEM = "messaging";
     public static final String CAMPO_SENDER_MENSAGEM = "sender";

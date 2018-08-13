@@ -18,6 +18,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import java.util.HashMap;
 import java.util.Map;
 
+import static br.gov.cgu.chatboteouvteste.Constantes.CAMPO_ACCESS_TOKEN;
 import static br.gov.cgu.chatboteouvteste.Constantes.CAMPO_ID_MENSAGEM;
 import static br.gov.cgu.chatboteouvteste.Constantes.CAMPO_TEXTO_MENSAGEM;
 
@@ -40,7 +41,7 @@ public class IntegracaoFacebookService {
     }
 
     public void enviarMensagem(RequisicaoMensagemDTO mensagemDTO, String conteudoMensagem) {
-        UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(urlFacebook).queryParam("access_token", accessToken);
+        UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(urlFacebook).queryParam(CAMPO_ACCESS_TOKEN, accessToken);
         String mensagem = montarMensagem(mensagemDTO, conteudoMensagem);
         HttpEntity<String> entity = new HttpEntity<>(mensagem, getHeaders());
 
