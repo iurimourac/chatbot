@@ -13,6 +13,7 @@ import org.springframework.web.client.RestTemplate;
 public class AppConfig {
 
     private final Logger logger = LoggerFactory.getLogger(AppConfig.class);
+
     @Bean
     public RestTemplate restTemplate(RestTemplateBuilder builder) {
         return builder.build();
