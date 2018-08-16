@@ -41,10 +41,10 @@ public class AppConfig {
         return new EventoUsuario();
     }
 
-//    @Bean
-//    @Scope(value = WebApplicationContext.SCOPE_APPLICATION, proxyMode = ScopedProxyMode.TARGET_CLASS)
-//    public InteracoesUsuarios interacoesUsuarios() {
-//        return new InteracoesUsuarios();
-//    }
+    @Bean
+    @Scope(value = WebApplicationContext.SCOPE_APPLICATION, proxyMode = ScopedProxyMode.TARGET_CLASS)
+    public InteracoesUsuarios interacoesUsuarios() {
+        return new InteracoesUsuarios();
+    }
 
 }
