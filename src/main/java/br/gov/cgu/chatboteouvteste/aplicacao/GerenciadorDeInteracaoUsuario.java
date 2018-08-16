@@ -76,7 +76,8 @@ public class GerenciadorDeInteracaoUsuario {
 //logger.debug("Depois atualizacao: {}", eventoUsuario.toString());
         InteracaoUsuario interacaoUsuario = sincronizarInteracoesUsuarios(event);
         try {
-            if (interacaoUsuario.isNovoEventoUsuario()) {
+//            if (interacaoUsuario.isNovoEventoUsuario()) {
+            if (interacoesUsuarios.isNovaInteracao(interacaoUsuario)) {
 //                atualizarDadosInteracaoUsuario(event);
                 enviarApresentacaoInicial(interacaoUsuario.getSenderId());
             } else {
@@ -118,6 +119,7 @@ public class GerenciadorDeInteracaoUsuario {
         interacaoUsuario.setSenderId(event.senderId());
         interacaoUsuario.setRecipientId(event.recipientId());
         interacaoUsuario.setTimestamp(event.timestamp());
+        logger.debug(interacaoUsuario.toString());
         return interacaoUsuario;
     }
 

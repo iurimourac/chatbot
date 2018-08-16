@@ -29,4 +29,7 @@ public class InteracoesUsuarios {
         return interacoes.get(interacaoUsuario.getSenderId());
     }
 
+    public boolean isNovaInteracao(InteracaoUsuario interacaoUsuario) {
+        return interacoes.containsKey(interacaoUsuario.getSenderId());
+    }
 }
