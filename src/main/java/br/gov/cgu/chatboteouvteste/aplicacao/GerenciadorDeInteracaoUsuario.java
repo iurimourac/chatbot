@@ -126,7 +126,14 @@ logger.debug("Depois atualizacao: {}", eventoUsuario.toString());
         this.messenger.send(messagePayload);
     }
 
-    private void handleTextMessageEvent(TextMessageEvent event) {
+//    private void handleTextMessageEvent(TextMessageEvent event) {
+    public void handleTextMessageEvent(TextMessageEvent event) {
+logger.debug("Antes atualizacao: {}", eventoUsuario.toString());
+eventoUsuario.setRecipientId(event.recipientId());
+eventoUsuario.setSenderId(event.senderId());
+eventoUsuario.setTimestamp(event.timestamp());
+logger.debug("Depois atualizacao: {}", eventoUsuario.toString());
+
         logger.debug("Received TextMessageEvent: {}", event);
 
         final String messageId = event.messageId();
