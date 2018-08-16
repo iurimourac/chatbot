@@ -55,7 +55,7 @@ public class EventoUsuario {
     @Override
     public String toString() {
         return "EventoUsuario{" +
-                "obj=" + this.hashCode() + ", " +
+                "obj=" + System.identityHashCode(this) + ", " +
                 "senderId='" + senderId + '\'' +
                 ", recipientId='" + recipientId + '\'' +
                 ", timestamp=" + timestamp.toString() +
