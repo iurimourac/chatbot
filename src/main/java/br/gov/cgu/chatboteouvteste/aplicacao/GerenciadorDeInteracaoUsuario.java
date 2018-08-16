@@ -109,8 +109,10 @@ public class GerenciadorDeInteracaoUsuario {
     }
 
     private InteracaoUsuario sincronizarInteracoesUsuarios(Event event) {
+        logger.debug("Antes sincronização: ", interacoesUsuarios.toString());
         InteracaoUsuario interacaoUsuario = montarInteracaoUsuario(event);
         interacoesUsuarios.adicionar(interacaoUsuario);
+        logger.debug("Depois sincronização: ", interacoesUsuarios.toString());
         return interacaoUsuario;
     }
 

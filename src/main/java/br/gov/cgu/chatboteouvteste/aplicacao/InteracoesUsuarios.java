@@ -32,4 +32,11 @@ public class InteracoesUsuarios {
     public boolean isNovaInteracao(InteracaoUsuario interacaoUsuario) {
         return !interacoes.containsKey(interacaoUsuario.getSenderId());
     }
+
+    @Override
+    public String toString() {
+        return "InteracoesUsuarios{" +
+                "interacoes=" + interacoes +
+                '}';
+    }
 }
