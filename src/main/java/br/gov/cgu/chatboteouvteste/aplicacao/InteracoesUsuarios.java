@@ -1,5 +1,6 @@
-package br.gov.cgu.chatboteouvteste.negocio;
+package br.gov.cgu.chatboteouvteste.aplicacao;
 
+import br.gov.cgu.chatboteouvteste.negocio.InteracaoUsuario;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 

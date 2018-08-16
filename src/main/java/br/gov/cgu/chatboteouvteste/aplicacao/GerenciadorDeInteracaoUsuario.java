@@ -1,7 +1,6 @@
 package br.gov.cgu.chatboteouvteste.aplicacao;
 
-import br.gov.cgu.chatboteouvteste.negocio.EventoUsuario;
-import br.gov.cgu.chatboteouvteste.negocio.EventoUsuarioFactory;
+import br.gov.cgu.chatboteouvteste.negocio.InteracaoUsuario;
 import com.github.messenger4j.Messenger;
 import com.github.messenger4j.common.WebviewHeightRatio;
 import com.github.messenger4j.exception.MessengerApiException;
@@ -35,7 +34,6 @@ import com.github.messenger4j.webhook.event.*;
 import com.github.messenger4j.webhook.event.attachment.Attachment;
 import com.github.messenger4j.webhook.event.attachment.LocationAttachment;
 import com.github.messenger4j.webhook.event.attachment.RichMediaAttachment;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,13 +58,13 @@ public class GerenciadorDeInteracaoUsuario {
     private static final String RESOURCE_URL = "https://raw.githubusercontent.com/fbsamples/messenger-platform-samples/master/node/public";
 
     private final Messenger messenger;
-//    private Interaco
-    private EventoUsuario eventoUsuario;
+//    private EventoUsuario eventoUsuario;
+    private InteracoesUsuarios interacoesUsuarios;
 
     @Autowired
-    public GerenciadorDeInteracaoUsuario(Messenger messenger, EventoUsuario eventoUsuario) {
+    public GerenciadorDeInteracaoUsuario(Messenger messenger, InteracoesUsuarios interacoesUsuarios) {
         this.messenger = messenger;
-        this.eventoUsuario = eventoUsuario;
+        this.interacoesUsuarios = interacoesUsuarios;
     }
 
     public void processarEvento(Event event) {
@@ -76,10 +74,11 @@ public class GerenciadorDeInteracaoUsuario {
 //        eventoUsuario.setSenderId(event.senderId());
 //        eventoUsuario.setTimestamp(event.timestamp());
 //logger.debug("Depois atualizacao: {}", eventoUsuario.toString());
+        InteracaoUsuario interacaoUsuario = sincronizarInteracoesUsuarios(event);
         try {
-            if (eventoUsuario.isNovoEventoUsuario()) {
-                atualizarDadosInteracaoUsuario(event);
-                enviarApresentacaoInicial(eventoUsuario.getSenderId());
+            if (interacaoUsuario.isNovoEventoUsuario()) {
+//                atualizarDadosInteracaoUsuario(event);
+                enviarApresentacaoInicial(interacaoUsuario.getSenderId());
             } else {
                 if (event.isTextMessageEvent()) {
                     handleTextMessageEvent(event.asTextMessageEvent());
@@ -108,34 +107,47 @@ public class GerenciadorDeInteracaoUsuario {
         }
     }
 
-    private void sincronizarInteracoesUsuarios(Event event) {
-
+    private InteracaoUsuario sincronizarInteracoesUsuarios(Event event) {
+        InteracaoUsuario interacaoUsuario = montarInteracaoUsuario(event);
+        interacoesUsuarios.adicionar(interacaoUsuario);
+        return interacaoUsuario;
     }
 
-    private void atualizarDadosInteracaoUsuario(Event event) {
-logger.debug("Antes atualizacao: {}", eventoUsuario.toString());
-        if (StringUtils.isEmpty(eventoUsuario.getSenderId())) {
-            eventoUsuario.setSenderId(event.senderId());
-            eventoUsuario.setRecipientId(event.recipientId());
-            eventoUsuario.setTimestamp(event.timestamp());
-        }
-logger.debug("Depois atualizacao: {}", eventoUsuario.toString());
+    private InteracaoUsuario montarInteracaoUsuario(Event event) {
+        InteracaoUsuario interacaoUsuario = new InteracaoUsuario();
+        interacaoUsuario.setSenderId(event.senderId());
+        interacaoUsuario.setRecipientId(event.recipientId());
+        interacaoUsuario.setTimestamp(event.timestamp());
+        return interacaoUsuario;
     }
+
+//    private void atualizarDadosInteracaoUsuario(Event event) {
+//logger.debug("Antes atualizacao: {}", eventoUsuario.toString());
+//        if (StringUtils.isEmpty(eventoUsuario.getSenderId())) {
+//            eventoUsuario.setSenderId(event.senderId());
+//            eventoUsuario.setRecipientId(event.recipientId());
+//            eventoUsuario.setTimestamp(event.timestamp());
+//        }
+//logger.debug("Depois atualizacao: {}", eventoUsuario.toString());
+//    }
 
     private void enviarApresentacaoInicial(String recipientId) throws MessengerApiException, MessengerIOException {
         final List<Button> buttons = Arrays.asList(
                 PostbackButton.create("Denúncia", "DEVELOPER_DEFINED_PAYLOAD"),
-                PostbackButton.create("Reclamação", "DEVELOPER_DEFINED_PAYLOAD"),
-                PostbackButton.create("Solicitação", "DEVELOPER_DEFINED_PAYLOAD"),
-                PostbackButton.create("Sugestão", "DEVELOPER_DEFINED_PAYLOAD"),
+//                PostbackButton.create("Reclamação", "DEVELOPER_DEFINED_PAYLOAD"),
+//                PostbackButton.create("Solicitação", "DEVELOPER_DEFINED_PAYLOAD"),
+//                PostbackButton.create("Sugestão", "DEVELOPER_DEFINED_PAYLOAD"),
                 PostbackButton.create("Elogio", "DEVELOPER_DEFINED_PAYLOAD"),
                 PostbackButton.create("Simplifique", "DEVELOPER_DEFINED_PAYLOAD")
         );
 
+//        final String mensagemBoasVindas = "Olá! Eu sou o \"Chico Bot\", o robô Ouvidor! " +
+//                "Por aqui, posso te ajudar a registrar uma denúncia, uma reclamação, uma solicitação, " +
+//                "uma sugestão, um elogio ou até mesmo um pedido de simplificação de serviço público " +
+//                "para as Ouvidorias do Governo Federal. Gostaria de fazer uma dessas manifestações? ";
         final String mensagemBoasVindas = "Olá! Eu sou o \"Chico Bot\", o robô Ouvidor! " +
-                "Por aqui, posso te ajudar a registrar uma denúncia, uma reclamação, uma solicitação, " +
-                "uma sugestão, um elogio ou até mesmo um pedido de simplificação de serviço público " +
-                "para as Ouvidorias do Governo Federal. Gostaria de fazer uma dessas manifestações? ";
+                "Por aqui, posso te ajudar a registrar uma manifestação para as Ouvidorias do Governo Federal. " +
+                "Gostaria de registrar qual tipo? ";
 
         final ButtonTemplate buttonTemplate = ButtonTemplate.create(mensagemBoasVindas, buttons);
         final TemplateMessage templateMessage = TemplateMessage.create(buttonTemplate);
@@ -145,11 +157,11 @@ logger.debug("Depois atualizacao: {}", eventoUsuario.toString());
 
 //    private void handleTextMessageEvent(TextMessageEvent event) {
     public void handleTextMessageEvent(TextMessageEvent event) {
-logger.debug("Antes atualizacao: {}", eventoUsuario.toString());
-eventoUsuario.setRecipientId(event.recipientId());
-eventoUsuario.setSenderId(event.senderId());
-eventoUsuario.setTimestamp(event.timestamp());
-logger.debug("Depois atualizacao: {}", eventoUsuario.toString());
+//logger.debug("Antes atualizacao: {}", eventoUsuario.toString());
+//eventoUsuario.setRecipientId(event.recipientId());
+//eventoUsuario.setSenderId(event.senderId());
+//eventoUsuario.setTimestamp(event.timestamp());
+//logger.debug("Depois atualizacao: {}", eventoUsuario.toString());
 
         logger.debug("Received TextMessageEvent: {}", event);
 

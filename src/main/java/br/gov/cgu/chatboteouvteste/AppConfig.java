@@ -1,7 +1,7 @@
 package br.gov.cgu.chatboteouvteste;
 
 import br.gov.cgu.chatboteouvteste.negocio.EventoUsuario;
-import br.gov.cgu.chatboteouvteste.negocio.InteracoesUsuarios;
+import br.gov.cgu.chatboteouvteste.aplicacao.InteracoesUsuarios;
 import com.github.messenger4j.Messenger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
