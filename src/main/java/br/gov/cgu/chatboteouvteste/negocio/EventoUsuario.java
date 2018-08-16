@@ -55,10 +55,10 @@ public class EventoUsuario {
     @Override
     public String toString() {
         return "EventoUsuario{" +
-                "obj=" + System.identityHashCode(this) + ", " +
+                "obj=" + this.hashCode() + ", " +
                 "senderId='" + senderId + '\'' +
                 ", recipientId='" + recipientId + '\'' +
-                ", timestamp=" + timestamp.toString() +
+                ", timestamp=" + timestamp +
                 ", tipoManifestacao=" + tipoManifestacao +
                 '}';
     }
