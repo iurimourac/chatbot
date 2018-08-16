@@ -1,11 +1,11 @@
-package br.gov.cgu.chatboteouvteste.web;
+package br.gov.cgu.chatboteouvteste.aplicacao;
 
-import br.gov.cgu.chatboteouvteste.aplicacao.GerenciadorDeInteracaoUsuario;
+import br.gov.cgu.chatboteouvteste.negocio.EventoUsuario;
+import br.gov.cgu.chatboteouvteste.negocio.EventoUsuarioFactory;
 import com.github.messenger4j.Messenger;
 import com.github.messenger4j.common.WebviewHeightRatio;
 import com.github.messenger4j.exception.MessengerApiException;
 import com.github.messenger4j.exception.MessengerIOException;
-import com.github.messenger4j.exception.MessengerVerificationException;
 import com.github.messenger4j.send.MessagePayload;
 import com.github.messenger4j.send.MessagingType;
 import com.github.messenger4j.send.NotificationType;
@@ -38,9 +38,7 @@ import com.github.messenger4j.webhook.event.attachment.RichMediaAttachment;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.stereotype.Service;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -50,64 +48,29 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import static com.github.messenger4j.Messenger.*;
 import static com.github.messenger4j.send.message.richmedia.RichMediaAsset.Type.*;
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
 
-/**
- * This is the main class for inbound and outbound communication with the Facebook Messenger Platform. The callback
- * handler is responsible for the webhook verification and processing of the inbound messages and events. It showcases
- * the features of the Messenger Platform.
- *
- * @author Max Grabenhorst
- */
-// [CGU]
-//@RestController
-//@RequestMapping("/callback")
-public class MessengerPlatformCallbackHandler {
+@Service
+public class GerenciadorDeInteracaoUsuario {
 
+    private final Logger logger = LoggerFactory.getLogger(GerenciadorDeInteracaoUsuario.class);
     private static final String RESOURCE_URL = "https://raw.githubusercontent.com/fbsamples/messenger-platform-samples/master/node/public";
 
-    private static final Logger logger = LoggerFactory.getLogger(MessengerPlatformCallbackHandler.class);
-
     private final Messenger messenger;
-    // [CGU]
-    private final GerenciadorDeInteracaoUsuario gerenciadorDeInteracaoUsuario;
 
-    // [CGU]
-//    @Autowired
-    public MessengerPlatformCallbackHandler(final Messenger messenger, GerenciadorDeInteracaoUsuario gerenciadorDeInteracaoUsuario) {
+    @Autowired
+    public GerenciadorDeInteracaoUsuario(Messenger messenger) {
         this.messenger = messenger;
-        this.gerenciadorDeInteracaoUsuario = gerenciadorDeInteracaoUsuario;
     }
 
-    /**
-     * Webhook verification endpoint. <p> The passed verification token (as query parameter) must match the configured
-     * verification token. In case this is true, the passed challenge string must be returned by this endpoint.
-     */
-    @RequestMapping(method = RequestMethod.GET)
-    public ResponseEntity<String> verifyWebhook(@RequestParam(MODE_REQUEST_PARAM_NAME) final String mode,
-                                                @RequestParam(VERIFY_TOKEN_REQUEST_PARAM_NAME) final String verifyToken,
-                                                @RequestParam(CHALLENGE_REQUEST_PARAM_NAME) final String challenge) {
-        logger.debug("Received Webhook verification request - mode: {} | verifyToken: {} | challenge: {}", mode, verifyToken, challenge);
+    public void processarEvento(Event event) {
+        EventoUsuario eventoUsuario = EventoUsuarioFactory.getOrCreate(event);
         try {
-            this.messenger.verifyWebhook(mode, verifyToken);
-            return ResponseEntity.ok(challenge);
-        } catch (MessengerVerificationException e) {
-            logger.warn("Webhook verification failed: {}", e.getMessage());
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
-        }
-    }
-
-    /**
-     * Callback endpoint responsible for processing the inbound messages and events.
-     */
-    @RequestMapping(method = RequestMethod.POST)
-    public ResponseEntity<Void> handleCallback(@RequestBody final String payload, @RequestHeader(SIGNATURE_HEADER_NAME) final String signature) {
-        logger.debug("Received Messenger Platform callback - payload: {} | signature: {}", payload, signature);
-        try {
-            this.messenger.onReceiveEvents(payload, of(signature), event -> {
+            if (eventoUsuario.isNovoEventoUsuario()) {
+                enviarApresentacaoInicial(eventoUsuario.getRecipientId());
+            } else {
                 if (event.isTextMessageEvent()) {
                     handleTextMessageEvent(event.asTextMessageEvent());
                 } else if (event.isAttachmentMessageEvent()) {
@@ -129,13 +92,31 @@ public class MessengerPlatformCallbackHandler {
                 } else {
                     handleFallbackEvent(event);
                 }
-            });
-            logger.debug("Processed callback payload successfully");
-            return ResponseEntity.status(HttpStatus.OK).build();
-        } catch (MessengerVerificationException e) {
-            logger.warn("Processing of callback payload failed: {}", e.getMessage());
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+            }
+        } catch (MessengerApiException | MessengerIOException e) {
+            handleSendException(e);
         }
+    }
+
+    private void enviarApresentacaoInicial(String recipientId) throws MessengerApiException, MessengerIOException {
+        final List<Button> buttons = Arrays.asList(
+                PostbackButton.create("Denúncia", "DEVELOPER_DEFINED_PAYLOAD"),
+                PostbackButton.create("Reclamação", "DEVELOPER_DEFINED_PAYLOAD"),
+                PostbackButton.create("Solicitação", "DEVELOPER_DEFINED_PAYLOAD"),
+                PostbackButton.create("Sugestão", "DEVELOPER_DEFINED_PAYLOAD"),
+                PostbackButton.create("Elogio", "DEVELOPER_DEFINED_PAYLOAD"),
+                PostbackButton.create("Simplifique", "DEVELOPER_DEFINED_PAYLOAD")
+        );
+
+        final String mensagemBoasVindas = "Olá! Eu sou o \"Chico Bot\", o robô Ouvidor! " +
+                "Por aqui, posso te ajudar a registrar uma denúncia, uma reclamação, uma solicitação, " +
+                "uma sugestão, um elogio ou até mesmo um pedido de simplificação de serviço público " +
+                "para as Ouvidorias do Governo Federal. Gostaria de fazer uma dessas manifestações? ";
+
+        final ButtonTemplate buttonTemplate = ButtonTemplate.create(mensagemBoasVindas, buttons);
+        final TemplateMessage templateMessage = TemplateMessage.create(buttonTemplate);
+        final MessagePayload messagePayload = MessagePayload.create(recipientId, MessagingType.RESPONSE, templateMessage);
+        this.messenger.send(messagePayload);
     }
 
     private void handleTextMessageEvent(TextMessageEvent event) {
@@ -465,9 +446,7 @@ public class MessengerPlatformCallbackHandler {
         final Instant watermark = event.watermark();
         logger.debug("watermark: {}", watermark);
 
-        messageIds.forEach(messageId -> {
-            logger.info("Received delivery confirmation for message '{}'", messageId);
-        });
+        messageIds.forEach(messageId -> logger.info("Received delivery confirmation for message '{}'", messageId));
 
         logger.info("All messages before '{}' were delivered to user '{}'", watermark, senderId);
     }
@@ -508,4 +487,5 @@ public class MessengerPlatformCallbackHandler {
     private void handleSendException(Exception e) {
         logger.error("Message could not be sent. An unexpected error occurred.", e);
     }
+
 }

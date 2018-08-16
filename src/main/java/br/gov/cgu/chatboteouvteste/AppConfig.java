@@ -19,7 +19,6 @@ public class AppConfig {
         return builder.build();
     }
 
-
     @Bean
     public Messenger messenger(@Value("${messenger4j.pageAccessToken}") String pageAccessToken,
                                @Value("${messenger4j.appSecret}") final String appSecret,
