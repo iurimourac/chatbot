@@ -51,4 +51,14 @@ public class EventoUsuario {
     public boolean isNovoEventoUsuario() {
         return tipoManifestacao == null;
     }
+
+    @Override
+    public String toString() {
+        return "EventoUsuario{" +
+                "senderId='" + senderId + '\'' +
+                ", recipientId='" + recipientId + '\'' +
+                ", timestamp=" + timestamp +
+                ", tipoManifestacao=" + tipoManifestacao +
+                '}';
+    }
 }
