@@ -14,9 +14,6 @@ import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.context.WebApplicationContext;
 
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-
 @Configuration
 public class AppConfig {
 
@@ -44,10 +41,10 @@ public class AppConfig {
         return new EventoUsuario();
     }
 
-    @Bean
-    @Scope(value = WebApplicationContext.SCOPE_APPLICATION, proxyMode = ScopedProxyMode.TARGET_CLASS)
-    public InteracoesUsuarios interacoesUsuarios() {
-        return new InteracoesUsuarios();
-    }
+//    @Bean
+//    @Scope(value = WebApplicationContext.SCOPE_APPLICATION, proxyMode = ScopedProxyMode.TARGET_CLASS)
+//    public InteracoesUsuarios interacoesUsuarios() {
+//        return new InteracoesUsuarios();
+//    }
 
 }
