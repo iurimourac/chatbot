@@ -1,9 +1,13 @@
 package br.gov.cgu.chatboteouvteste.negocio;
 
 import com.github.messenger4j.webhook.Event;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 public final class EventoUsuarioFactory {
+
+    private final Logger logger = LoggerFactory.getLogger(EventoUsuarioFactory.class);
 
     @Autowired
     private EventoUsuario eventoUsuario;
@@ -12,13 +16,14 @@ public final class EventoUsuarioFactory {
 
     public static EventoUsuario getOrCreate(Event event) {
         EventoUsuarioFactory factory = new EventoUsuarioFactory();
-        EventoUsuario eventoUsuario = factory.eventoUsuario;
-        if (eventoUsuario == null) {
-            eventoUsuario = new EventoUsuario();
+factory.logger.debug("Factory inicio - {}", factory.eventoUsuario.toString());
+        if (factory.eventoUsuario == null) {
+            factory.eventoUsuario = new EventoUsuario();
         }
-        eventoUsuario.setSenderId(event.senderId());
-        eventoUsuario.setRecipientId(event.recipientId());
-        eventoUsuario.setTimestamp(event.timestamp());
-        return eventoUsuario;
+        factory.eventoUsuario.setSenderId(event.senderId());
+        factory.eventoUsuario.setRecipientId(event.recipientId());
+        factory.eventoUsuario.setTimestamp(event.timestamp());
+factory.logger.debug("Factory fim - {}", factory.eventoUsuario.toString());
+        return factory.eventoUsuario;
     }
 }

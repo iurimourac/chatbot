@@ -55,6 +55,7 @@ public class EventoUsuario {
     @Override
     public String toString() {
         return "EventoUsuario{" +
+                "obj=" + this +
                 "senderId='" + senderId + '\'' +
                 ", recipientId='" + recipientId + '\'' +
                 ", timestamp=" + timestamp +
