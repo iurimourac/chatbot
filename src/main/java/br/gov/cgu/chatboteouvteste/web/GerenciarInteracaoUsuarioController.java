@@ -47,10 +47,10 @@ public class GerenciarInteracaoUsuarioController {
     public ResponseEntity<Void> handleCallback(@RequestBody final String payload, @RequestHeader(SIGNATURE_HEADER_NAME) final String signature) {
         logger.debug("Received Messenger Platform callback - payload: {} | signature: {}", payload, signature);
         try {
-//            this.messenger.onReceiveEvents(payload, of(signature), gerenciadorDeInteracaoUsuario::processarEvento);
-            this.messenger.onReceiveEvents(payload, of(signature), event -> {
-                gerenciadorDeInteracaoUsuario.handleTextMessageEvent(event.asTextMessageEvent());
-            });
+            this.messenger.onReceiveEvents(payload, of(signature), gerenciadorDeInteracaoUsuario::processarEvento);
+//            this.messenger.onReceiveEvents(payload, of(signature), event -> {
+//                gerenciadorDeInteracaoUsuario.handleTextMessageEvent(event.asTextMessageEvent());
+//            });
             logger.debug("Callback payload processado com sucesso");
             return ResponseEntity.status(HttpStatus.OK).build();
         } catch (MessengerVerificationException e) {

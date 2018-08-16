@@ -35,6 +35,7 @@ import com.github.messenger4j.webhook.event.*;
 import com.github.messenger4j.webhook.event.attachment.Attachment;
 import com.github.messenger4j.webhook.event.attachment.LocationAttachment;
 import com.github.messenger4j.webhook.event.attachment.RichMediaAttachment;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -69,13 +70,14 @@ public class GerenciadorDeInteracaoUsuario {
 
     public void processarEvento(Event event) {
 //        EventoUsuario eventoUsuario = EventoUsuarioFactory.getOrCreate(event);
-logger.debug("Antes atualizacao: {}", eventoUsuario.toString());
-        eventoUsuario.setRecipientId(event.recipientId());
-        eventoUsuario.setSenderId(event.senderId());
-        eventoUsuario.setTimestamp(event.timestamp());
+//logger.debug("Antes atualizacao: {}", eventoUsuario.toString());
+//        eventoUsuario.setRecipientId(event.recipientId());
+//        eventoUsuario.setSenderId(event.senderId());
+//        eventoUsuario.setTimestamp(event.timestamp());
+//logger.debug("Depois atualizacao: {}", eventoUsuario.toString());
         try {
-logger.debug("Depois atualizacao: {}", eventoUsuario.toString());
             if (eventoUsuario.isNovoEventoUsuario()) {
+                atualizarDadosInteracaoUsuario(event);
                 enviarApresentacaoInicial(eventoUsuario.getRecipientId());
             } else {
                 if (event.isTextMessageEvent()) {
@@ -103,6 +105,16 @@ logger.debug("Depois atualizacao: {}", eventoUsuario.toString());
         } catch (MessengerApiException | MessengerIOException e) {
             handleSendException(e);
         }
+    }
+
+    private void atualizarDadosInteracaoUsuario(Event event) {
+logger.debug("Antes atualizacao: {}", eventoUsuario.toString());
+        if (StringUtils.isEmpty(eventoUsuario.getSenderId())) {
+            eventoUsuario.setSenderId(event.senderId());
+            eventoUsuario.setRecipientId(event.recipientId());
+            eventoUsuario.setTimestamp(event.timestamp());
+        }
+logger.debug("Depois atualizacao: {}", eventoUsuario.toString());
     }
 
     private void enviarApresentacaoInicial(String recipientId) throws MessengerApiException, MessengerIOException {

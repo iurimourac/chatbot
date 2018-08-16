@@ -8,7 +8,7 @@ import org.springframework.web.context.WebApplicationContext;
 import java.time.Instant;
 
 @Component
-@Scope(value = WebApplicationContext.SCOPE_SESSION, proxyMode = ScopedProxyMode.TARGET_CLASS)
+//@Scope(value = WebApplicationContext.SCOPE_SESSION, proxyMode = ScopedProxyMode.TARGET_CLASS)
 public class EventoUsuario {
 
     private String senderId;
@@ -55,10 +55,10 @@ public class EventoUsuario {
     @Override
     public String toString() {
         return "EventoUsuario{" +
-                "obj=" + this.hashCode() +
+                "obj=" + this.hashCode() + ", " +
                 "senderId='" + senderId + '\'' +
                 ", recipientId='" + recipientId + '\'' +
-                ", timestamp=" + timestamp +
+                ", timestamp=" + timestamp.toString() +
                 ", tipoManifestacao=" + tipoManifestacao +
                 '}';
     }
