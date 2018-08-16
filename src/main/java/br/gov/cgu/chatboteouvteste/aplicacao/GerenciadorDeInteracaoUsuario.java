@@ -69,9 +69,12 @@ public class GerenciadorDeInteracaoUsuario {
 
     public void processarEvento(Event event) {
 //        EventoUsuario eventoUsuario = EventoUsuarioFactory.getOrCreate(event);
-        EventoUsuarioFactory.getOrCreate(event);
+logger.debug("Antes atualizacao: {}", eventoUsuario.toString());
+        eventoUsuario.setRecipientId(event.recipientId());
+        eventoUsuario.setSenderId(event.senderId());
+        eventoUsuario.setTimestamp(event.timestamp());
         try {
-logger.debug(eventoUsuario.toString());
+logger.debug("Depois atualizacao: {}", eventoUsuario.toString());
             if (eventoUsuario.isNovoEventoUsuario()) {
                 enviarApresentacaoInicial(eventoUsuario.getRecipientId());
             } else {
