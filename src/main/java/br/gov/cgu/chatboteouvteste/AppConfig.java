@@ -1,6 +1,7 @@
 package br.gov.cgu.chatboteouvteste;
 
 import br.gov.cgu.chatboteouvteste.negocio.EventoUsuario;
+import br.gov.cgu.chatboteouvteste.negocio.InteracoesUsuarios;
 import com.github.messenger4j.Messenger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,6 +13,9 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.context.WebApplicationContext;
+
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Configuration
 public class AppConfig {
@@ -35,9 +39,15 @@ public class AppConfig {
     }
 
     @Bean
-//    @Scope(value = WebApplicationContext.SCOPE_SESSION, proxyMode = ScopedProxyMode.TARGET_CLASS)
-    @Scope(value = WebApplicationContext.SCOPE_APPLICATION, proxyMode = ScopedProxyMode.TARGET_CLASS)
+    @Scope(value = WebApplicationContext.SCOPE_SESSION, proxyMode = ScopedProxyMode.TARGET_CLASS)
     public EventoUsuario eventoUsuario() {
         return new EventoUsuario();
     }
+
+    @Bean
+    @Scope(value = WebApplicationContext.SCOPE_APPLICATION, proxyMode = ScopedProxyMode.TARGET_CLASS)
+    public InteracoesUsuarios interacoesUsuarios() {
+        return new InteracoesUsuarios();
+    }
+
 }

@@ -60,6 +60,7 @@ public class GerenciadorDeInteracaoUsuario {
     private static final String RESOURCE_URL = "https://raw.githubusercontent.com/fbsamples/messenger-platform-samples/master/node/public";
 
     private final Messenger messenger;
+//    private Interaco
     private EventoUsuario eventoUsuario;
 
     @Autowired
@@ -78,7 +79,7 @@ public class GerenciadorDeInteracaoUsuario {
         try {
             if (eventoUsuario.isNovoEventoUsuario()) {
                 atualizarDadosInteracaoUsuario(event);
-                enviarApresentacaoInicial(eventoUsuario.getRecipientId());
+                enviarApresentacaoInicial(eventoUsuario.getSenderId());
             } else {
                 if (event.isTextMessageEvent()) {
                     handleTextMessageEvent(event.asTextMessageEvent());
@@ -105,6 +106,10 @@ public class GerenciadorDeInteracaoUsuario {
         } catch (MessengerApiException | MessengerIOException e) {
             handleSendException(e);
         }
+    }
+
+    private void sincronizarInteracoesUsuarios(Event event) {
+
     }
 
     private void atualizarDadosInteracaoUsuario(Event event) {
