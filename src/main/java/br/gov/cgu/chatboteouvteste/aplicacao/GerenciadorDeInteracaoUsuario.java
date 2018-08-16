@@ -109,10 +109,10 @@ public class GerenciadorDeInteracaoUsuario {
     }
 
     private InteracaoUsuario sincronizarInteracoesUsuarios(Event event) {
-        logger.debug("Antes sincronização: ", interacoesUsuarios.toString());
+        logger.debug("Antes sincronização: {}", interacoesUsuarios.toString());
         InteracaoUsuario interacaoUsuario = montarInteracaoUsuario(event);
         interacoesUsuarios.adicionar(interacaoUsuario);
-        logger.debug("Depois sincronização: ", interacoesUsuarios.toString());
+        logger.debug("Depois sincronização: {}", interacoesUsuarios.toString());
         return interacaoUsuario;
     }
 
@@ -121,7 +121,7 @@ public class GerenciadorDeInteracaoUsuario {
         interacaoUsuario.setSenderId(event.senderId());
         interacaoUsuario.setRecipientId(event.recipientId());
         interacaoUsuario.setTimestamp(event.timestamp());
-        logger.debug(interacaoUsuario.toString());
+        logger.debug("montarInteracaoUsuario: {}", interacaoUsuario.toString());
         return interacaoUsuario;
     }
 
@@ -439,7 +439,7 @@ public class GerenciadorDeInteracaoUsuario {
         final Instant timestamp = event.timestamp();
         logger.debug("timestamp: {}", timestamp);
         logger.info("Received postback for user '{}' and page '{}' with payload '{}' at '{}'", senderId, senderId, payload, timestamp);
-        sendTextMessage(senderId, "Postback event tapped");
+        sendTextMessage(senderId, "Postback event tapped: " + event.priorMessage());
     }
 
     private void handleAccountLinkingEvent(AccountLinkingEvent event) {
