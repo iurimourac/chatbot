@@ -30,6 +30,6 @@ public class InteracoesUsuarios {
     }
 
     public boolean isNovaInteracao(InteracaoUsuario interacaoUsuario) {
-        return interacoes.containsKey(interacaoUsuario.getSenderId());
+        return !interacoes.containsKey(interacaoUsuario.getSenderId());
     }
 }
