@@ -65,12 +65,12 @@
             <scope>test</scope>
         </dependency>
 
-        <dependency>
-            <groupId>br.gov.cgu</groupId>
-            <artifactId>componentes-test</artifactId>
-            <version>${componentes-test.version}</version>
-            <scope>test</scope>
-        </dependency>
+        <!--<dependency>-->
+            <!--<groupId>br.gov.cgu</groupId>-->
+            <!--<artifactId>componentes-test</artifactId>-->
+            <!--<version>${componentes-test.version}</version>-->
+            <!--<scope>test</scope>-->
+        <!--</dependency>-->
     </dependencies>
 
     <build>
