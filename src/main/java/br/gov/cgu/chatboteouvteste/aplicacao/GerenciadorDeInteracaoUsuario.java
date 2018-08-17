@@ -59,7 +59,6 @@ public class GerenciadorDeInteracaoUsuario {
     private static final String RESOURCE_URL = "https://raw.githubusercontent.com/fbsamples/messenger-platform-samples/master/node/public";
 
     private final Messenger messenger;
-//    private EventoUsuario eventoUsuario;
     private InteracoesUsuarios interacoesUsuarios;
 
     @Autowired
@@ -69,11 +68,11 @@ public class GerenciadorDeInteracaoUsuario {
     }
 
     public void processarEvento(Event event) {
-        InteracaoUsuario interacaoUsuario = montarInteracaoUsuario(event);
         logger.debug("Antes sincronização: {}", interacoesUsuarios.toString());
+        InteracaoUsuario interacaoUsuario = montarInteracaoUsuario(event);
         boolean isNovaInteracao = interacoesUsuarios.isNovaInteracao(interacaoUsuario);
-        logger.debug("Depois sincronização: {}", interacoesUsuarios.toString());
         interacoesUsuarios.adicionar(interacaoUsuario);
+        logger.debug("Depois sincronização: {}", interacoesUsuarios.toString());
 
         try {
             if (isNovaInteracao) {
