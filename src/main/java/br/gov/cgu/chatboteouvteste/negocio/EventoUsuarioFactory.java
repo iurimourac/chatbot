@@ -1,29 +1,26 @@
 package br.gov.cgu.chatboteouvteste.negocio;
 
 import com.github.messenger4j.webhook.Event;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
+@Component
 public final class EventoUsuarioFactory {
 
-    private final Logger logger = LoggerFactory.getLogger(EventoUsuarioFactory.class);
+    private static EventoUsuario eventoUsuario;
 
     @Autowired
-    private EventoUsuario eventoUsuario;
-
-    private EventoUsuarioFactory() {}
+    public EventoUsuarioFactory(EventoUsuario eventoUsuario) {
+        EventoUsuarioFactory.eventoUsuario = eventoUsuario;
+    }
 
     public static EventoUsuario getOrCreate(Event event) {
-        EventoUsuarioFactory factory = new EventoUsuarioFactory();
-factory.logger.debug("Factory inicio - {}", factory.eventoUsuario.toString());
-        if (factory.eventoUsuario == null) {
-            factory.eventoUsuario = new EventoUsuario();
+        if (eventoUsuario == null) {
+            eventoUsuario = new EventoUsuario();
         }
-        factory.eventoUsuario.setSenderId(event.senderId());
-        factory.eventoUsuario.setRecipientId(event.recipientId());
-        factory.eventoUsuario.setTimestamp(event.timestamp());
-factory.logger.debug("Factory fim - {}", factory.eventoUsuario.toString());
-        return factory.eventoUsuario;
+        eventoUsuario.setSenderId(event.senderId());
+        eventoUsuario.setRecipientId(event.recipientId());
+        eventoUsuario.setTimestamp(event.timestamp());
+        return eventoUsuario;
     }
 }
