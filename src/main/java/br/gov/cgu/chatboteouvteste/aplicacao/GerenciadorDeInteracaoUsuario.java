@@ -70,7 +70,9 @@ public class GerenciadorDeInteracaoUsuario {
 
     public void processarEvento(Event event) {
         InteracaoUsuario interacaoUsuario = montarInteracaoUsuario(event);
+        logger.debug("Antes sincronização: {}", interacoesUsuarios.toString());
         boolean isNovaInteracao = interacoesUsuarios.isNovaInteracao(interacaoUsuario);
+        logger.debug("Depois sincronização: {}", interacoesUsuarios.toString());
         interacoesUsuarios.adicionar(interacaoUsuario);
 
         try {
