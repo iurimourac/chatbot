@@ -1,6 +1,7 @@
 package br.gov.cgu.chatboteouvteste.aplicacao;
 
 import br.gov.cgu.chatboteouvteste.negocio.InteracaoUsuario;
+import br.gov.cgu.chatboteouvteste.negocio.TipoManifestacaoEnum;
 import com.github.messenger4j.Messenger;
 import com.github.messenger4j.common.WebviewHeightRatio;
 import com.github.messenger4j.exception.MessengerApiException;
@@ -68,17 +69,12 @@ public class GerenciadorDeInteracaoUsuario {
     }
 
     public void processarEvento(Event event) {
-//        EventoUsuario eventoUsuario = EventoUsuarioFactory.getOrCreate(event);
-//logger.debug("Antes atualizacao: {}", eventoUsuario.toString());
-//        eventoUsuario.setRecipientId(event.recipientId());
-//        eventoUsuario.setSenderId(event.senderId());
-//        eventoUsuario.setTimestamp(event.timestamp());
-//logger.debug("Depois atualizacao: {}", eventoUsuario.toString());
-        InteracaoUsuario interacaoUsuario = sincronizarInteracoesUsuarios(event);
+        InteracaoUsuario interacaoUsuario = montarInteracaoUsuario(event);
+        boolean isNovaInteracao = interacoesUsuarios.isNovaInteracao(interacaoUsuario);
+        interacoesUsuarios.adicionar(interacaoUsuario);
+
         try {
-//            if (interacaoUsuario.isNovoEventoUsuario()) {
-            if (interacoesUsuarios.isNovaInteracao(interacaoUsuario)) {
-//                atualizarDadosInteracaoUsuario(event);
+            if (isNovaInteracao) {
                 enviarApresentacaoInicial(interacaoUsuario.getSenderId());
             } else {
                 if (event.isTextMessageEvent()) {
@@ -88,6 +84,10 @@ public class GerenciadorDeInteracaoUsuario {
                 } else if (event.isQuickReplyMessageEvent()) {
                     handleQuickReplyMessageEvent(event.asQuickReplyMessageEvent());
                 } else if (event.isPostbackEvent()) {
+                    // [CGU]
+                    if (interacaoUsuario.isNovoEventoUsuario()) {
+                        interacaoUsuario.setTipoManifestacao(TipoManifestacaoEnum.get(event.asPostbackEvent().title()));
+                    }
                     handlePostbackEvent(event.asPostbackEvent());
                 } else if (event.isAccountLinkingEvent()) {
                     handleAccountLinkingEvent(event.asAccountLinkingEvent());
@@ -108,14 +108,6 @@ public class GerenciadorDeInteracaoUsuario {
         }
     }
 
-    private InteracaoUsuario sincronizarInteracoesUsuarios(Event event) {
-        logger.debug("Antes sincronização: {}", interacoesUsuarios.toString());
-        InteracaoUsuario interacaoUsuario = montarInteracaoUsuario(event);
-        interacoesUsuarios.adicionar(interacaoUsuario);
-        logger.debug("Depois sincronização: {}", interacoesUsuarios.toString());
-        return interacaoUsuario;
-    }
-
     private InteracaoUsuario montarInteracaoUsuario(Event event) {
         InteracaoUsuario interacaoUsuario = new InteracaoUsuario();
         interacaoUsuario.setSenderId(event.senderId());
@@ -124,16 +116,6 @@ public class GerenciadorDeInteracaoUsuario {
         logger.debug("montarInteracaoUsuario: {}", interacaoUsuario.toString());
         return interacaoUsuario;
     }
-
-//    private void atualizarDadosInteracaoUsuario(Event event) {
-//logger.debug("Antes atualizacao: {}", eventoUsuario.toString());
-//        if (StringUtils.isEmpty(eventoUsuario.getSenderId())) {
-//            eventoUsuario.setSenderId(event.senderId());
-//            eventoUsuario.setRecipientId(event.recipientId());
-//            eventoUsuario.setTimestamp(event.timestamp());
-//        }
-//logger.debug("Depois atualizacao: {}", eventoUsuario.toString());
-//    }
 
     private void enviarApresentacaoInicial(String recipientId) throws MessengerApiException, MessengerIOException {
         final List<Button> buttons = Arrays.asList(
@@ -159,14 +141,7 @@ public class GerenciadorDeInteracaoUsuario {
         this.messenger.send(messagePayload);
     }
 
-//    private void handleTextMessageEvent(TextMessageEvent event) {
-    public void handleTextMessageEvent(TextMessageEvent event) {
-//logger.debug("Antes atualizacao: {}", eventoUsuario.toString());
-//eventoUsuario.setRecipientId(event.recipientId());
-//eventoUsuario.setSenderId(event.senderId());
-//eventoUsuario.setTimestamp(event.timestamp());
-//logger.debug("Depois atualizacao: {}", eventoUsuario.toString());
-
+    private void handleTextMessageEvent(TextMessageEvent event) {
         logger.debug("Received TextMessageEvent: {}", event);
 
         final String messageId = event.messageId();
@@ -434,12 +409,14 @@ public class GerenciadorDeInteracaoUsuario {
         logger.debug("Handling PostbackEvent");
         final String payload = event.payload().orElse("empty payload");
         logger.debug("payload: {}", payload);
+        final String title = event.title();
+        logger.debug("title: {}", title);
         final String senderId = event.senderId();
         logger.debug("senderId: {}", senderId);
         final Instant timestamp = event.timestamp();
         logger.debug("timestamp: {}", timestamp);
-        logger.info("Received postback for user '{}' and page '{}' with payload '{}' at '{}'", senderId, senderId, payload, timestamp);
-        sendTextMessage(senderId, "Postback event tapped: " + event.priorMessage());
+        logger.info("Received postback for user '{}' and page '{}' with payload '{}' and title '{}' at '{}'", senderId, senderId, payload, title, timestamp);
+        sendTextMessage(senderId, "Postback event tapped");
     }
 
     private void handleAccountLinkingEvent(AccountLinkingEvent event) {
