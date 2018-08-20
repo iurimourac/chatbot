@@ -144,7 +144,8 @@ public class GerenciadorDeInteracaoUsuario {
 */
 
         List<Element> elementos = new ArrayList<>();
-        elementos.add(Element.create("Denúncia", empty(), of(new URL("https://chatboteouvteste.herokuapp.com/static/img/linkDenuncia.png")), empty(),
+        elementos.add(Element.create("Denúncia", of("Registrar uma denúncia"),
+                of(new URL("https://chatboteouvteste.herokuapp.com/static/img/linkDenuncia.png")), empty(),
                 of(IntegracaoMessengerService.criarBotoesPostback(Arrays.asList("Denúncia")))));
         IntegracaoMessengerService.enviarMensagemDeLista(recipientId, elementos);
     }
