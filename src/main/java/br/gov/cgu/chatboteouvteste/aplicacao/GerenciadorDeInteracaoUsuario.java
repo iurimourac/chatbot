@@ -67,10 +67,10 @@ public class GerenciadorDeInteracaoUsuario {
         this.interacoesUsuarios = interacoesUsuarios;
     }
 
-    public void limparInteracoesUsuarios() {
-        logger.debug("Antes limpeza de interações: {}", interacoesUsuarios.toString());
+    public void limparInteracoes() {
+        logger.debug("Antes limpeza interações: {}", interacoesUsuarios.toString());
         interacoesUsuarios = new InteracoesUsuarios();
-        logger.debug("Depois limpeza de interações: {}", interacoesUsuarios.toString());
+        logger.debug("Depois limpeza interações: {}", interacoesUsuarios.toString());
     }
 
     public void processarEvento(Event event) {
@@ -149,6 +149,28 @@ public class GerenciadorDeInteracaoUsuario {
         this.messenger.send(messagePayload);
 */
 
+//        List<Element> elementos = new ArrayList<>();
+//        elementos.add(Element.create("Denúncia",
+//                empty(), //of("Registrar uma denúncia"),
+//                of(new URL("https://chatboteouvteste.herokuapp.com/static/img/linkDenuncia.png")), empty(),
+//                of(IntegracaoMessengerService.criarBotoesPostback(Arrays.asList("Denúncia")))));
+//        IntegracaoMessengerService.enviarMensagemDeLista(recipientId, elementos);
+
+
+//        List<Button> botoes = new ArrayList<>();
+//        botoes.add(UrlButton.create("Open Web URL", new URL("https://www.oculus.com/en-us/rift/")));
+//        botoes.add(PostbackButton.create("Call Postback", "Payload for first bubble"));
+//
+//        final List<Element> elementos = new ArrayList<>();
+//        elementos.add(Element.create("Denúncia", of("Registro de denúncias"),
+//                of(new URL("https://chatboteouvteste.herokuapp.com/static/img/linkDenuncia.png")),
+//                empty(), of(botoes)));
+//
+//        final ListTemplate listTemplate = ListTemplate.create(elementos);
+//        final TemplateMessage templateMessage = TemplateMessage.create(listTemplate);
+//        final MessagePayload messagePayload = MessagePayload.create(recipientId, MessagingType.RESPONSE, templateMessage);
+//        this.messenger.send(messagePayload);
+
 
         List<Button> riftButtons = new ArrayList<>();
         riftButtons.add(UrlButton.create("Open Web URL", new URL("https://www.oculus.com/en-us/rift/")));
@@ -158,8 +180,7 @@ public class GerenciadorDeInteracaoUsuario {
 
         final List<Element> elements = new ArrayList<>();
 
-        elements.add(
-                Element.create("rift", of("Next-generation virtual reality"), of(new URL("https://www.oculus.com/en-us/rift/")), empty(), of(riftButtons)));
+        elements.add(Element.create("Denúncia", of("Registro de denúncia"), of(new URL("https://www.oculus.com/en-us/rift/")), empty(), of(riftButtons)));
         elements.add(Element.create("touch", of("Your Hands, Now in VR"), of(new URL("https://www.oculus.com/en-us/touch/")), empty(), of(touchButtons)));
 
         final ListTemplate listTemplate = ListTemplate.create(elements);
