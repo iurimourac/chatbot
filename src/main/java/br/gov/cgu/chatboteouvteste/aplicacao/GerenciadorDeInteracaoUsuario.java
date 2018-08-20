@@ -156,16 +156,35 @@ public class GerenciadorDeInteracaoUsuario {
 //                of(IntegracaoMessengerService.criarBotoesPostback(Arrays.asList("Denúncia")))));
 //        IntegracaoMessengerService.enviarMensagemDeLista(recipientId, elementos);
 
-        List<Button> botoes = new ArrayList<>();
-        botoes.add(UrlButton.create("Open Web URL", new URL("https://www.oculus.com/en-us/rift/")));
-        botoes.add(PostbackButton.create("Call Postback", "Payload for first bubble"));
 
-        final List<Element> elementos = new ArrayList<>();
-        elementos.add(Element.create("Denúncia", of("Registro de denúncias"),
-                of(new URL("https://chatboteouvteste.herokuapp.com/static/img/linkDenuncia.png")),
-                empty(), of(botoes)));
+//        List<Button> botoes = new ArrayList<>();
+//        botoes.add(UrlButton.create("Open Web URL", new URL("https://www.oculus.com/en-us/rift/")));
+//        botoes.add(PostbackButton.create("Call Postback", "Payload for first bubble"));
+//
+//        final List<Element> elementos = new ArrayList<>();
+//        elementos.add(Element.create("Denúncia", of("Registro de denúncias"),
+//                of(new URL("https://chatboteouvteste.herokuapp.com/static/img/linkDenuncia.png")),
+//                empty(), of(botoes)));
+//
+//        final ListTemplate listTemplate = ListTemplate.create(elementos);
+//        final TemplateMessage templateMessage = TemplateMessage.create(listTemplate);
+//        final MessagePayload messagePayload = MessagePayload.create(recipientId, MessagingType.RESPONSE, templateMessage);
+//        this.messenger.send(messagePayload);
 
-        final ListTemplate listTemplate = ListTemplate.create(elementos);
+
+        List<Button> riftButtons = new ArrayList<>();
+        riftButtons.add(UrlButton.create("Open Web URL", new URL("https://www.oculus.com/en-us/rift/")));
+
+        List<Button> touchButtons = new ArrayList<>();
+        touchButtons.add(UrlButton.create("Open Web URL", new URL("https://www.oculus.com/en-us/touch/")));
+
+        final List<Element> elements = new ArrayList<>();
+
+        elements.add(
+                Element.create("rift", of("Next-generation virtual reality"), of(new URL("https://www.oculus.com/en-us/rift/")), empty(), of(riftButtons)));
+        elements.add(Element.create("touch", of("Your Hands, Now in VR"), of(new URL("https://www.oculus.com/en-us/touch/")), empty(), of(touchButtons)));
+
+        final ListTemplate listTemplate = ListTemplate.create(elements);
         final TemplateMessage templateMessage = TemplateMessage.create(listTemplate);
         final MessagePayload messagePayload = MessagePayload.create(recipientId, MessagingType.RESPONSE, templateMessage);
         this.messenger.send(messagePayload);
