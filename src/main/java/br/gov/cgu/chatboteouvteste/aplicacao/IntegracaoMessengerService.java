@@ -31,11 +31,11 @@ public class IntegracaoMessengerService {
         IntegracaoMessengerService.messenger = messenger;
     }
 
-    public static List<PostbackButton> criarBotoesPostback(List<String> opcoes) {
+    public static List<Button> criarBotoesPostback(List<String> opcoes) {
         if (opcoes.size() > 3) {
             throw new IllegalArgumentException("Somente 3 opções podem ser informadas para criação de botões.");
         }
-        List<PostbackButton> botoes = new ArrayList<>();
+        List<Button> botoes = new ArrayList<>();
         botoes.addAll(opcoes.stream()
                 .map(x -> PostbackButton.create(x, TIPO_PAYLOAD_BOTAO_POSTBACK))
                 .collect(Collectors.toList()));

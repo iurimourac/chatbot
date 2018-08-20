@@ -104,7 +104,7 @@ public class GerenciadorDeInteracaoUsuario {
                     handleFallbackEvent(event);
                 }
             }
-        } catch (MessengerApiException | MessengerIOException e) {
+        } catch (MessengerApiException | MessengerIOException | MalformedURLException e) {
             handleSendException(e);
         }
     }
@@ -118,7 +118,8 @@ public class GerenciadorDeInteracaoUsuario {
         return interacaoUsuario;
     }
 
-    private void enviarApresentacaoInicial(String recipientId) throws MessengerApiException, MessengerIOException {
+    private void enviarApresentacaoInicial(String recipientId) throws MessengerApiException, MessengerIOException, MalformedURLException {
+/*
         final List<Button> buttons = Arrays.asList(
                 PostbackButton.create("Denúncia", "DEVELOPER_DEFINED_PAYLOAD"),
 //                PostbackButton.create("Reclamação", "DEVELOPER_DEFINED_PAYLOAD"),
@@ -140,6 +141,12 @@ public class GerenciadorDeInteracaoUsuario {
         final TemplateMessage templateMessage = TemplateMessage.create(buttonTemplate);
         final MessagePayload messagePayload = MessagePayload.create(recipientId, MessagingType.RESPONSE, templateMessage);
         this.messenger.send(messagePayload);
+*/
+
+        List<Element> elementos = new ArrayList<>();
+        elementos.add(Element.create("Denúncia", empty(), of(new URL("static/img/linkDenuncia.png")), empty(),
+                of(IntegracaoMessengerService.criarBotoesPostback(Arrays.asList("Denúncia")))));
+        IntegracaoMessengerService.enviarMensagemDeLista(recipientId, elementos);
     }
 
     private void handleTextMessageEvent(TextMessageEvent event) {
