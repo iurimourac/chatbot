@@ -149,12 +149,26 @@ public class GerenciadorDeInteracaoUsuario {
         this.messenger.send(messagePayload);
 */
 
-        List<Element> elementos = new ArrayList<>();
-        elementos.add(Element.create("Denúncia",
-                empty(), //of("Registrar uma denúncia"),
-                of(new URL("https://chatboteouvteste.herokuapp.com/static/img/linkDenuncia.png")), empty(),
-                of(IntegracaoMessengerService.criarBotoesPostback(Arrays.asList("Denúncia")))));
-        IntegracaoMessengerService.enviarMensagemDeLista(recipientId, elementos);
+//        List<Element> elementos = new ArrayList<>();
+//        elementos.add(Element.create("Denúncia",
+//                empty(), //of("Registrar uma denúncia"),
+//                of(new URL("https://chatboteouvteste.herokuapp.com/static/img/linkDenuncia.png")), empty(),
+//                of(IntegracaoMessengerService.criarBotoesPostback(Arrays.asList("Denúncia")))));
+//        IntegracaoMessengerService.enviarMensagemDeLista(recipientId, elementos);
+
+        List<Button> botoes = new ArrayList<>();
+        botoes.add(UrlButton.create("Open Web URL", new URL("https://www.oculus.com/en-us/rift/")));
+        botoes.add(PostbackButton.create("Call Postback", "Payload for first bubble"));
+
+        final List<Element> elementos = new ArrayList<>();
+        elementos.add(Element.create("Denúncia", of("Registro de denúncias"),
+                of(new URL("https://chatboteouvteste.herokuapp.com/static/img/linkDenuncia.png")),
+                empty(), of(botoes)));
+
+        final ListTemplate listTemplate = ListTemplate.create(elementos);
+        final TemplateMessage templateMessage = TemplateMessage.create(listTemplate);
+        final MessagePayload messagePayload = MessagePayload.create(recipientId, MessagingType.RESPONSE, templateMessage);
+        this.messenger.send(messagePayload);
     }
 
     private void handleTextMessageEvent(TextMessageEvent event) {
