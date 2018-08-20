@@ -180,8 +180,7 @@ public class GerenciadorDeInteracaoUsuario {
 
         final List<Element> elements = new ArrayList<>();
 
-        elements.add(
-                Element.create("rift", of("Next-generation virtual reality"), of(new URL("https://www.oculus.com/en-us/rift/")), empty(), of(riftButtons)));
+        elements.add(Element.create("Denúncia", of("Registro de denúncia"), of(new URL("https://www.oculus.com/en-us/rift/")), empty(), of(riftButtons)));
         elements.add(Element.create("touch", of("Your Hands, Now in VR"), of(new URL("https://www.oculus.com/en-us/touch/")), empty(), of(touchButtons)));
 
         final ListTemplate listTemplate = ListTemplate.create(elements);
