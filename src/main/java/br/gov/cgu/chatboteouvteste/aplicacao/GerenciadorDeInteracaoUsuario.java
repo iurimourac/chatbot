@@ -67,6 +67,10 @@ public class GerenciadorDeInteracaoUsuario {
         this.interacoesUsuarios = interacoesUsuarios;
     }
 
+    public void limparInteracoes() {
+        interacoesUsuarios = new InteracoesUsuarios();
+    }
+
     public void processarEvento(Event event) {
         logger.debug("Antes sincronização: {}", interacoesUsuarios.toString());
         InteracaoUsuario interacaoUsuario = montarInteracaoUsuario(event);
@@ -144,7 +148,8 @@ public class GerenciadorDeInteracaoUsuario {
 */
 
         List<Element> elementos = new ArrayList<>();
-        elementos.add(Element.create("Denúncia", of("Registrar uma denúncia"),
+        elementos.add(Element.create("Denúncia",
+                empty(), //of("Registrar uma denúncia"),
                 of(new URL("https://chatboteouvteste.herokuapp.com/static/img/linkDenuncia.png")), empty(),
                 of(IntegracaoMessengerService.criarBotoesPostback(Arrays.asList("Denúncia")))));
         IntegracaoMessengerService.enviarMensagemDeLista(recipientId, elementos);
