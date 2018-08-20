@@ -56,7 +56,7 @@ public class GerenciarInteracaoUsuarioController {
         }
     }
 
-    @RequestMapping(value = "limpar-interacoes", method = RequestMethod.POST)
+    @RequestMapping(value = "limpar-interacoes", method = RequestMethod.GET)
     public ResponseEntity<Void> limparInteracoes() {
         logger.debug("Interacoes de usuario removidas");
         gerenciadorDeInteracaoUsuario.limparInteracoes();
