@@ -17,4 +17,7 @@ public final class Constantes {
     public static final String CAMPO_MESSAGE_MENSAGEM = "message";
     public static final String CAMPO_TEXTO_MENSAGEM = "text";
     public static final String CAMPO_POSTBACK_MENSAGEM = "postback";
+
+    // MESSENGER
+    public static final String TIPO_PAYLOAD_BOTAO_POSTBACK = "DEVELOPER_DEFINED_PAYLOAD";
 }

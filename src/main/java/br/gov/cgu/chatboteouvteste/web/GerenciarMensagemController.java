@@ -1,7 +1,7 @@
 package br.gov.cgu.chatboteouvteste.web;
 
 import br.gov.cgu.chatboteouvteste.Constantes;
-import br.gov.cgu.chatboteouvteste.aplicacao.GerenciadorDeMensagem;
+import br.gov.cgu.chatboteouvteste.aplicacao.prototipo.GerenciadorDeMensagem;
 import br.gov.cgu.chatboteouvteste.negocio.MensagemInvalidaException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -1,4 +1,4 @@
-package br.gov.cgu.chatboteouvteste.aplicacao;
+package br.gov.cgu.chatboteouvteste.aplicacao.prototipo;
 
 import br.gov.cgu.chatboteouvteste.negocio.EventoUsuario;
 import br.gov.cgu.chatboteouvteste.negocio.MensagemInvalidaException;
