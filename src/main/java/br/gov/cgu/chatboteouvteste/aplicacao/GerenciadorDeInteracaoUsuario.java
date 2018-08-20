@@ -68,7 +68,9 @@ public class GerenciadorDeInteracaoUsuario {
     }
 
     public void limparInteracoes() {
+        logger.debug("Antes limpeza interações: {}", interacoesUsuarios.toString());
         interacoesUsuarios = new InteracoesUsuarios();
+        logger.debug("Depois limpeza interações: {}", interacoesUsuarios.toString());
     }
 
     public void processarEvento(Event event) {
