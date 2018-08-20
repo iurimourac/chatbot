@@ -1,4 +1,4 @@
-package br.gov.cgu.chatboteouvteste.aplicacao;
+package br.gov.cgu.chatboteouvteste.aplicacao.prototipo;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;

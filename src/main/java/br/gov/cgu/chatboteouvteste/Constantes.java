@@ -4,7 +4,8 @@ public final class Constantes {
 
     private Constantes() {}
 
-    // Conteúdo de campos
+    // PROTOTIPO
+    // Conteudo de campos
     public static final String OBJETO_PAGINA = "page";
     public static final String MODO_SUBSCRIBE = "subscribe";
 
@@ -17,4 +18,7 @@ public final class Constantes {
     public static final String CAMPO_MESSAGE_MENSAGEM = "message";
     public static final String CAMPO_TEXTO_MENSAGEM = "text";
     public static final String CAMPO_POSTBACK_MENSAGEM = "postback";
+
+    // MESSENGER
+    public static final String TIPO_PAYLOAD_BOTAO_POSTBACK = "DEVELOPER_DEFINED_PAYLOAD";
 }

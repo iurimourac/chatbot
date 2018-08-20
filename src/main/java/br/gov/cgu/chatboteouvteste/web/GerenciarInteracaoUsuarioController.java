@@ -56,4 +56,10 @@ public class GerenciarInteracaoUsuarioController {
         }
     }
 
+    @RequestMapping(value = "limpar-interacoes", method = RequestMethod.POST)
+    public ResponseEntity<Void> limparInteracoes() {
+        gerenciadorDeInteracaoUsuario.limparInteracoesUsuarios();
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
+
 }

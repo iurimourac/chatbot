@@ -1,4 +1,4 @@
-package br.gov.cgu.chatboteouvteste.aplicacao;
+package br.gov.cgu.chatboteouvteste.aplicacao.prototipo;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
