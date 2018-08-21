@@ -125,7 +125,6 @@ public class GerenciadorDeInteracaoUsuario {
     }
 
     private void enviarApresentacaoInicial(String recipientId) throws MessengerApiException, MessengerIOException, MalformedURLException {
-/*
         final List<Button> buttons = Arrays.asList(
                 PostbackButton.create("Denúncia", "DEVELOPER_DEFINED_PAYLOAD"),
 //                PostbackButton.create("Reclamação", "DEVELOPER_DEFINED_PAYLOAD"),
@@ -141,13 +140,12 @@ public class GerenciadorDeInteracaoUsuario {
 //                "para as Ouvidorias do Governo Federal. Gostaria de fazer uma dessas manifestações? ";
         final String mensagemBoasVindas = "Olá! Eu sou o \"Chico Bot\", o robô Ouvidor! " +
                 "Por aqui, posso te ajudar a registrar uma manifestação para as Ouvidorias do Governo Federal. " +
-                "Gostaria de registrar qual tipo? ";
+                "Gostaria de registrar qual tipo?";
 
         final ButtonTemplate buttonTemplate = ButtonTemplate.create(mensagemBoasVindas, buttons);
         final TemplateMessage templateMessage = TemplateMessage.create(buttonTemplate);
         final MessagePayload messagePayload = MessagePayload.create(recipientId, MessagingType.RESPONSE, templateMessage);
         this.messenger.send(messagePayload);
-*/
 
 //        List<Element> elementos = new ArrayList<>();
 //        elementos.add(Element.create("Denúncia",
@@ -172,6 +170,7 @@ public class GerenciadorDeInteracaoUsuario {
 //        this.messenger.send(messagePayload);
 
 
+/*
         List<Button> riftButtons = new ArrayList<>();
         riftButtons.add(UrlButton.create("Open Web URL", new URL("https://www.oculus.com/en-us/rift/")));
 
@@ -187,6 +186,7 @@ public class GerenciadorDeInteracaoUsuario {
         final TemplateMessage templateMessage = TemplateMessage.create(listTemplate);
         final MessagePayload messagePayload = MessagePayload.create(recipientId, MessagingType.RESPONSE, templateMessage);
         this.messenger.send(messagePayload);
+*/
     }
 
     private void handleTextMessageEvent(TextMessageEvent event) {
