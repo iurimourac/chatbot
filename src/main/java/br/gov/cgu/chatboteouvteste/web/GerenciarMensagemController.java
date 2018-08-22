@@ -28,7 +28,7 @@ public class GerenciarMensagemController {
         this.gerenciadorDeMensagem = gerenciadorDeMensagem;
     }
 
-    @RequestMapping(value = "/webhook", method = RequestMethod.GET)
+    @RequestMapping(value = "/webhook-original", method = RequestMethod.GET)
     public ResponseEntity<String> autenticar(@RequestParam(value = "hub.mode") String mode,
                                              @RequestParam(value = "hub.verify_token") String token,
                                              @RequestParam(value = "hub.challenge") String challenge) {
@@ -45,7 +45,7 @@ public class GerenciarMensagemController {
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
-    @RequestMapping(value = "/webhook", method = RequestMethod.POST)
+    @RequestMapping(value = "/webhook-original", method = RequestMethod.POST)
     public ResponseEntity<String> tratarMensagem(@RequestBody String mensagem) {
         try {
             logger.info("Mensagem recebida com sucesso!!! Conteúdo: {}.", mensagem);
