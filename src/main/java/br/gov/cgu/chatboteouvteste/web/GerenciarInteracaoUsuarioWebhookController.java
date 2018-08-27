@@ -58,7 +58,7 @@ public class GerenciarInteracaoUsuarioWebhookController {
 
     @RequestMapping(value = "limpar-interacoes", method = RequestMethod.GET)
     public ResponseEntity<Void> limparInteracoes() {
-        logger.debug("***WEBHOOK*** Interacoes de usuario removidas");
+        logger.debug("***WEBHOOK*** Interacoes de usuario removidas.");
         gerenciador.limparInteracoes();
         return ResponseEntity.status(HttpStatus.OK).build();
     }
