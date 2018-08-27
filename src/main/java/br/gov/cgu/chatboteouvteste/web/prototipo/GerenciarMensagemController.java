@@ -1,4 +1,4 @@
-package br.gov.cgu.chatboteouvteste.web;
+package br.gov.cgu.chatboteouvteste.web.prototipo;
 
 import br.gov.cgu.chatboteouvteste.Constantes;
 import br.gov.cgu.chatboteouvteste.aplicacao.prototipo.GerenciadorDeMensagem;

@@ -35,6 +35,8 @@ public class AppConfig {
         return Messenger.create(pageAccessToken, appSecret, verifyToken);
     }
 
+
+    //TODO Este bean será removido após implementação da InteracaoUsuario
     @Bean
     @Scope(value = WebApplicationContext.SCOPE_SESSION, proxyMode = ScopedProxyMode.TARGET_CLASS)
     public EventoUsuario eventoUsuario() {
