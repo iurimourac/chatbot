@@ -14,7 +14,7 @@
     </root>
 
     <!-- LOG "br.gov.cgu.*" at TRACE level -->
-    <logger name="br.gov.cgu.chatboteouvteste" level="trace" additivity="false">
+    <logger name="br.gov.cgu" level="trace" additivity="false">
         <appender-ref ref="Console" />
     </logger>
 </configuration>

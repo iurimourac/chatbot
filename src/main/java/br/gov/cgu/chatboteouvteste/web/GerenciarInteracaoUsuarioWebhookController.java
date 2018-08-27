@@ -14,16 +14,16 @@ import static com.github.messenger4j.Messenger.*;
 import static java.util.Optional.of;
 
 @RestController
-@RequestMapping("/callback")
-public class GerenciarInteracaoUsuarioController {
+@RequestMapping("/webhook")
+public class GerenciarInteracaoUsuarioWebhookController {
 
-    private final Logger logger = LoggerFactory.getLogger(GerenciarInteracaoUsuarioController.class);
+    private final Logger logger = LoggerFactory.getLogger(GerenciarInteracaoUsuarioWebhookController.class);
 
     private final Messenger messenger;
     private final GerenciadorDeInteracaoUsuario gerenciadorDeInteracaoUsuario;
 
     @Autowired
-    public GerenciarInteracaoUsuarioController(Messenger messenger, GerenciadorDeInteracaoUsuario gerenciadorDeInteracaoUsuario) {
+    public GerenciarInteracaoUsuarioWebhookController(Messenger messenger, GerenciadorDeInteracaoUsuario gerenciadorDeInteracaoUsuario) {
         this.messenger = messenger;
         this.gerenciadorDeInteracaoUsuario = gerenciadorDeInteracaoUsuario;
     }
@@ -32,7 +32,7 @@ public class GerenciarInteracaoUsuarioController {
     public ResponseEntity<String> autenticar(@RequestParam(MODE_REQUEST_PARAM_NAME) final String mode,
                                              @RequestParam(VERIFY_TOKEN_REQUEST_PARAM_NAME) final String verifyToken,
                                              @RequestParam(CHALLENGE_REQUEST_PARAM_NAME) final String challenge) {
-        logger.debug("Received Webhook verification request - mode: {} | verifyToken: {} | challenge: {}", mode, verifyToken, challenge);
+        logger.debug("***WEBHOOK*** Received Webhook verification request - mode: {} | verifyToken: {} | challenge: {}", mode, verifyToken, challenge);
         try {
             this.messenger.verifyWebhook(mode, verifyToken);
             logger.info("Autenticação com sucesso!!!");
@@ -45,7 +45,7 @@ public class GerenciarInteracaoUsuarioController {
 
     @RequestMapping(method = RequestMethod.POST)
     public ResponseEntity<Void> handleCallback(@RequestBody final String payload, @RequestHeader(SIGNATURE_HEADER_NAME) final String signature) {
-        logger.debug("Received Messenger Platform callback - payload: {} | signature: {}", payload, signature);
+        logger.debug("***WEBHOOK*** Received Messenger Platform callback - payload: {} | signature: {}", payload, signature);
         try {
             this.messenger.onReceiveEvents(payload, of(signature), gerenciadorDeInteracaoUsuario::processarEvento);
             logger.debug("Callback payload processado com sucesso");
@@ -58,7 +58,7 @@ public class GerenciarInteracaoUsuarioController {
 
     @RequestMapping(value = "limpar-interacoes", method = RequestMethod.GET)
     public ResponseEntity<Void> limparInteracoes() {
-        logger.debug("Interacoes de usuario removidas");
+        logger.debug("***WEBHOOK*** Interacoes de usuario removidas");
         gerenciadorDeInteracaoUsuario.limparInteracoes();
         return ResponseEntity.status(HttpStatus.OK).build();
     }

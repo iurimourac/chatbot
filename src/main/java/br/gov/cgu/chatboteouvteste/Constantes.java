@@ -4,7 +4,8 @@ public final class Constantes {
 
     private Constantes() {}
 
-    // Conteúdo de campos
+    // PROTOTIPO
+    // Conteudo de campos
     public static final String OBJETO_PAGINA = "page";
     public static final String MODO_SUBSCRIBE = "subscribe";
 
