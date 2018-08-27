@@ -1,7 +1,9 @@
 package br.gov.cgu.chatboteouvteste.aplicacao;
 
+import br.gov.cgu.chatboteouvteste.negocio.EtapaTipoManifestacao;
 import br.gov.cgu.chatboteouvteste.negocio.InteracaoUsuario;
 import br.gov.cgu.chatboteouvteste.negocio.TipoManifestacao;
+import br.gov.cgu.chatboteouvteste.negocio.TipoManifestacaoInvalidoException;
 import com.github.messenger4j.Messenger;
 import com.github.messenger4j.common.WebviewHeightRatio;
 import com.github.messenger4j.exception.MessengerApiException;
@@ -43,47 +45,48 @@ import org.springframework.stereotype.Service;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 import static com.github.messenger4j.send.message.richmedia.RichMediaAsset.Type.*;
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
 
 @Service
-public class GerenciadorDeInteracaoUsuario {
+public class GerenciadorDeInteracaoUsuarioWebhook {
 
-    private final Logger logger = LoggerFactory.getLogger(GerenciadorDeInteracaoUsuario.class);
+    private final Logger logger = LoggerFactory.getLogger(GerenciadorDeInteracaoUsuarioWebhook.class);
     private static final String RESOURCE_URL = "https://raw.githubusercontent.com/fbsamples/messenger-platform-samples/master/node/public";
+
+    private InteracaoUsuario interacaoUsuario;
 
     private final Messenger messenger;
     private InteracoesUsuarios interacoesUsuarios;
 
     @Autowired
-    public GerenciadorDeInteracaoUsuario(Messenger messenger, InteracoesUsuarios interacoesUsuarios) {
+    public GerenciadorDeInteracaoUsuarioWebhook(Messenger messenger, InteracoesUsuarios interacoesUsuarios) {
         this.messenger = messenger;
         this.interacoesUsuarios = interacoesUsuarios;
     }
 
+    //TODO Remover depois. Somente utilizado em desenv
     public void limparInteracoes() {
-        logger.debug("Antes limpeza interações: {}", interacoesUsuarios.toString());
+        logger.debug("Antes limpeza interações: {}", interacoesUsuarios);
         interacoesUsuarios = new InteracoesUsuarios();
-        logger.debug("Depois limpeza interações: {}", interacoesUsuarios.toString());
+        logger.debug("Depois limpeza interações: {}", interacoesUsuarios);
     }
 
     public void processarEvento(Event event) {
-        logger.debug("Antes sincronização: {}", interacoesUsuarios.toString());
-        InteracaoUsuario interacaoUsuario = montarInteracaoUsuario(event);
+        logger.debug("Antes sincronização: {}", interacoesUsuarios);
+        montarInteracaoUsuario(event);
         boolean isNovaInteracao = interacoesUsuarios.isNovaInteracao(interacaoUsuario);
         interacoesUsuarios.adicionar(interacaoUsuario);
-        logger.debug("Depois sincronização: {}", interacoesUsuarios.toString());
+        logger.debug("Depois sincronização: {}", interacoesUsuarios);
 
         try {
             if (isNovaInteracao) {
-                enviarApresentacaoInicial(interacaoUsuario.getSenderId());
+                enviarApresentacaoInicial();
             } else {
+                //TODO Remover ações abaixo (somente para testes)
                 if (event.isTextMessageEvent()) {
                     handleTextMessageEvent(event.asTextMessageEvent());
                 } else if (event.isAttachmentMessageEvent()) {
@@ -91,9 +94,9 @@ public class GerenciadorDeInteracaoUsuario {
                 } else if (event.isQuickReplyMessageEvent()) {
                     handleQuickReplyMessageEvent(event.asQuickReplyMessageEvent());
                 } else if (event.isPostbackEvent()) {
-                    // [CGU]
                     if (interacaoUsuario.isNovoEventoUsuario()) {
                         interacaoUsuario.setTipoManifestacao(TipoManifestacao.get(event.asPostbackEvent().title()));
+                        processarProximaEtapa();
                     }
                     handlePostbackEvent(event.asPostbackEvent());
                 } else if (event.isAccountLinkingEvent()) {
@@ -110,83 +113,54 @@ public class GerenciadorDeInteracaoUsuario {
                     handleFallbackEvent(event);
                 }
             }
-        } catch (MessengerApiException | MessengerIOException | MalformedURLException e) {
+        } catch (MessengerApiException | MessengerIOException e) {
             handleSendException(e);
         }
     }
 
-    private InteracaoUsuario montarInteracaoUsuario(Event event) {
-        InteracaoUsuario interacaoUsuario = new InteracaoUsuario();
-        interacaoUsuario.setSenderId(event.senderId());
-        interacaoUsuario.setRecipientId(event.recipientId());
-        interacaoUsuario.setTimestamp(event.timestamp());
-        logger.debug("montarInteracaoUsuario: {}", interacaoUsuario.toString());
-        return interacaoUsuario;
+    private void montarInteracaoUsuario(Event event) {
+        interacaoUsuario = interacoesUsuarios.get(event.senderId());
+        if (interacaoUsuario == null) {
+            interacaoUsuario = new InteracaoUsuario();
+            interacaoUsuario.setSenderId(event.senderId());
+            interacaoUsuario.setRecipientId(event.recipientId());
+            interacaoUsuario.setTimestamp(event.timestamp());
+            logger.debug("Nova interação de usuário.");
+        }
+        logger.debug("montarInteracaoUsuario: {}", interacaoUsuario);
     }
 
-    private void enviarApresentacaoInicial(String recipientId) throws MessengerApiException, MessengerIOException, MalformedURLException {
-        final List<Button> buttons = Arrays.asList(
-                PostbackButton.create("Denúncia", "DEVELOPER_DEFINED_PAYLOAD"),
-//                PostbackButton.create("Reclamação", "DEVELOPER_DEFINED_PAYLOAD"),
-//                PostbackButton.create("Solicitação", "DEVELOPER_DEFINED_PAYLOAD"),
-//                PostbackButton.create("Sugestão", "DEVELOPER_DEFINED_PAYLOAD"),
-                PostbackButton.create("Elogio", "DEVELOPER_DEFINED_PAYLOAD"),
-                PostbackButton.create("Simplifique", "DEVELOPER_DEFINED_PAYLOAD")
-        );
+    private void enviarApresentacaoInicial() {
+        try {
+            EtapaTipoManifestacao etapaInicial = EtapaTipoManifestacaoBuilder.getEtapaInicial();
+            etapaInicial.getTipoInteracao().processar(interacaoUsuario.getSenderId(), etapaInicial.getDescricao(), etapaInicial.getOpcoes());
+            interacaoUsuario.setUltimaEtapaInteracaoProcessada(etapaInicial);
+        } catch (MessengerApiException | MessengerIOException e) {
+            logger.error("Ocorreu um erro ao enviar a mensagem inicial da interação.", e);
+        }
+    }
 
-//        final String mensagemBoasVindas = "Olá! Eu sou o \"Chico Bot\", o robô Ouvidor! " +
-//                "Por aqui, posso te ajudar a registrar uma denúncia, uma reclamação, uma solicitação, " +
-//                "uma sugestão, um elogio ou até mesmo um pedido de simplificação de serviço público " +
-//                "para as Ouvidorias do Governo Federal. Gostaria de fazer uma dessas manifestações? ";
-        final String mensagemBoasVindas = "Olá! Eu sou o \"Chico Bot\", o robô Ouvidor! " +
-                "Por aqui, posso te ajudar a registrar uma manifestação para as Ouvidorias do Governo Federal. " +
-                "Gostaria de registrar qual tipo?";
+    private void processarProximaEtapa(Optional<String>... parametros) throws MessengerApiException, MessengerIOException {
+        validarDadosDeInteracaoUsuario();
 
-        final ButtonTemplate buttonTemplate = ButtonTemplate.create(mensagemBoasVindas, buttons);
-        final TemplateMessage templateMessage = TemplateMessage.create(buttonTemplate);
-        final MessagePayload messagePayload = MessagePayload.create(recipientId, MessagingType.RESPONSE, templateMessage);
-        this.messenger.send(messagePayload);
+        EtapaTipoManifestacao etapa = interacaoUsuario.getTipoManifestacao().getProximaEtapa(interacaoUsuario.getUltimaEtapaInteracaoProcessada().getId());
+        etapa.processar(interacaoUsuario.getSenderId(), Optional.empty());
+        interacaoUsuario.setUltimaEtapaInteracaoProcessada(etapa);
 
-//        List<Element> elementos = new ArrayList<>();
-//        elementos.add(Element.create("Denúncia",
-//                empty(), //of("Registrar uma denúncia"),
-//                of(new URL("https://chatboteouvteste.herokuapp.com/static/img/linkDenuncia.png")), empty(),
-//                of(IntegracaoMessengerService.criarBotoesPostback(Arrays.asList("Denúncia")))));
-//        IntegracaoMessengerService.enviarMensagemDeLista(recipientId, elementos);
+        if (interacaoUsuario.isTodasEtapaProcessadas()) {
+            etapa = EtapaTipoManifestacaoBuilder.getEtapaFinal();
+            etapa.processar(interacaoUsuario.getSenderId());
+        }
+    }
 
+    private void validarDadosDeInteracaoUsuario() {
+        if (interacaoUsuario.getTipoManifestacao() == null) {
+            throw new TipoManifestacaoInvalidoException("Tipo de manifestação não definido na interação!");
+        }
 
-//        List<Button> botoes = new ArrayList<>();
-//        botoes.add(UrlButton.create("Open Web URL", new URL("https://www.oculus.com/en-us/rift/")));
-//        botoes.add(PostbackButton.create("Call Postback", "Payload for first bubble"));
-//
-//        final List<Element> elementos = new ArrayList<>();
-//        elementos.add(Element.create("Denúncia", of("Registro de denúncias"),
-//                of(new URL("https://chatboteouvteste.herokuapp.com/static/img/linkDenuncia.png")),
-//                empty(), of(botoes)));
-//
-//        final ListTemplate listTemplate = ListTemplate.create(elementos);
-//        final TemplateMessage templateMessage = TemplateMessage.create(listTemplate);
-//        final MessagePayload messagePayload = MessagePayload.create(recipientId, MessagingType.RESPONSE, templateMessage);
-//        this.messenger.send(messagePayload);
-
-
-/*
-        List<Button> riftButtons = new ArrayList<>();
-        riftButtons.add(UrlButton.create("Open Web URL", new URL("https://www.oculus.com/en-us/rift/")));
-
-//        List<Button> touchButtons = new ArrayList<>();
-//        touchButtons.add(UrlButton.create("Open Web URL", new URL("https://www.oculus.com/en-us/touch/")));
-
-        final List<Element> elements = new ArrayList<>();
-
-        elements.add(Element.create("Denúncia", of("Registro de denúncia"), of(new URL("https://chatboteouvteste.herokuapp.com/static/img/linkDenuncia.png")), empty(), of(riftButtons)));
-//        elements.add(Element.create("touch", of("Your Hands, Now in VR"), of(new URL("https://www.oculus.com/en-us/touch/")), empty(), of(touchButtons)));
-
-        final ListTemplate listTemplate = ListTemplate.create(elements);
-        final TemplateMessage templateMessage = TemplateMessage.create(listTemplate);
-        final MessagePayload messagePayload = MessagePayload.create(recipientId, MessagingType.RESPONSE, templateMessage);
-        this.messenger.send(messagePayload);
-*/
+        if (interacaoUsuario.getUltimaEtapaInteracaoProcessada() == null) {
+            throw new TipoManifestacaoInvalidoException("Etapa do tipo de manifestação não definida na interação!");
+        }
     }
 
     private void handleTextMessageEvent(TextMessageEvent event) {
@@ -457,13 +431,11 @@ public class GerenciadorDeInteracaoUsuario {
         logger.debug("Handling PostbackEvent");
         final String payload = event.payload().orElse("empty payload");
         logger.debug("payload: {}", payload);
-        final String title = event.title();
-        logger.debug("title: {}", title);
         final String senderId = event.senderId();
         logger.debug("senderId: {}", senderId);
         final Instant timestamp = event.timestamp();
         logger.debug("timestamp: {}", timestamp);
-        logger.info("Received postback for user '{}' and page '{}' with payload '{}' and title '{}' at '{}'", senderId, senderId, payload, title, timestamp);
+        logger.info("Received postback for user '{}' and page '{}' with payload '{}' at '{}'", senderId, senderId, payload, timestamp);
         sendTextMessage(senderId, "Postback event tapped");
     }
 

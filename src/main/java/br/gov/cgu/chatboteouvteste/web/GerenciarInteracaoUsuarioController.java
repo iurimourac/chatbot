@@ -56,6 +56,7 @@ public class GerenciarInteracaoUsuarioController {
         }
     }
 
+    //TODO Remover depois. Somente utilizado em desenv
     @RequestMapping(value = "limpar-interacoes", method = RequestMethod.GET)
     public ResponseEntity<Void> limparInteracoes() {
         logger.debug("Interacoes de usuario removidas");

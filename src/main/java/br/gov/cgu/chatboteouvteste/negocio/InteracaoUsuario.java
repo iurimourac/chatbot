@@ -7,7 +7,8 @@ public class InteracaoUsuario {
     private String senderId;
     private String recipientId;
     private Instant timestamp;
-    private TipoManifestacaoEnum tipoManifestacao;
+    private TipoManifestacao tipoManifestacao;
+    private EtapaTipoManifestacao ultimaEtapaInteracaoProcessada;
 
     public String getSenderId() {
         return senderId;
@@ -33,16 +34,29 @@ public class InteracaoUsuario {
         this.timestamp = timestamp;
     }
 
-    public TipoManifestacaoEnum getTipoManifestacao() {
+    public TipoManifestacao getTipoManifestacao() {
         return tipoManifestacao;
     }
 
-    public void setTipoManifestacao(TipoManifestacaoEnum tipoManifestacao) {
+    public void setTipoManifestacao(TipoManifestacao tipoManifestacao) {
         this.tipoManifestacao = tipoManifestacao;
+    }
+
+    public EtapaTipoManifestacao getUltimaEtapaInteracaoProcessada() {
+        return ultimaEtapaInteracaoProcessada;
+    }
+
+    public void setUltimaEtapaInteracaoProcessada(EtapaTipoManifestacao ultimaEtapaInteracaoProcessada) {
+        this.ultimaEtapaInteracaoProcessada = ultimaEtapaInteracaoProcessada;
     }
 
     public boolean isNovoEventoUsuario() {
         return tipoManifestacao == null;
+    }
+
+    public boolean isTodasEtapaProcessadas() {
+        return tipoManifestacao != null && ultimaEtapaInteracaoProcessada != null
+                && tipoManifestacao.isTodasEtapasProcessadas(ultimaEtapaInteracaoProcessada.getId());
     }
 
     @Override
@@ -52,7 +66,7 @@ public class InteracaoUsuario {
                 ", recipientId='" + recipientId + '\'' +
                 ", timestamp=" + timestamp +
                 ", tipoManifestacao=" + tipoManifestacao +
+                ", ultimaEtapaInteracaoProcessada=" + ultimaEtapaInteracaoProcessada +
                 '}';
     }
-
 }

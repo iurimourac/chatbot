@@ -1,6 +1,6 @@
 package br.gov.cgu.chatboteouvteste.web;
 
-import br.gov.cgu.chatboteouvteste.aplicacao.GerenciadorDeInteracaoUsuario;
+import br.gov.cgu.chatboteouvteste.aplicacao.GerenciadorDeInteracaoUsuarioWebhook;
 import com.github.messenger4j.Messenger;
 import com.github.messenger4j.exception.MessengerVerificationException;
 import org.slf4j.Logger;
@@ -20,12 +20,12 @@ public class GerenciarInteracaoUsuarioWebhookController {
     private final Logger logger = LoggerFactory.getLogger(GerenciarInteracaoUsuarioWebhookController.class);
 
     private final Messenger messenger;
-    private final GerenciadorDeInteracaoUsuario gerenciadorDeInteracaoUsuario;
+    private final GerenciadorDeInteracaoUsuarioWebhook gerenciador;
 
     @Autowired
-    public GerenciarInteracaoUsuarioWebhookController(Messenger messenger, GerenciadorDeInteracaoUsuario gerenciadorDeInteracaoUsuario) {
+    public GerenciarInteracaoUsuarioWebhookController(Messenger messenger, GerenciadorDeInteracaoUsuarioWebhook gerenciador) {
         this.messenger = messenger;
-        this.gerenciadorDeInteracaoUsuario = gerenciadorDeInteracaoUsuario;
+        this.gerenciador = gerenciador;
     }
 
     @RequestMapping(method = RequestMethod.GET)
@@ -47,7 +47,7 @@ public class GerenciarInteracaoUsuarioWebhookController {
     public ResponseEntity<Void> handleCallback(@RequestBody final String payload, @RequestHeader(SIGNATURE_HEADER_NAME) final String signature) {
         logger.debug("***WEBHOOK*** Received Messenger Platform callback - payload: {} | signature: {}", payload, signature);
         try {
-            this.messenger.onReceiveEvents(payload, of(signature), gerenciadorDeInteracaoUsuario::processarEvento);
+            this.messenger.onReceiveEvents(payload, of(signature), gerenciador::processarEvento);
             logger.debug("Callback payload processado com sucesso");
             return ResponseEntity.status(HttpStatus.OK).build();
         } catch (MessengerVerificationException e) {
@@ -59,7 +59,7 @@ public class GerenciarInteracaoUsuarioWebhookController {
     @RequestMapping(value = "limpar-interacoes", method = RequestMethod.GET)
     public ResponseEntity<Void> limparInteracoes() {
         logger.debug("***WEBHOOK*** Interacoes de usuario removidas");
-        gerenciadorDeInteracaoUsuario.limparInteracoes();
+        gerenciador.limparInteracoes();
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 

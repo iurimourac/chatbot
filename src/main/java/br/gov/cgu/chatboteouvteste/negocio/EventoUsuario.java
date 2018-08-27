@@ -1,9 +1,6 @@
 package br.gov.cgu.chatboteouvteste.negocio;
 
-import org.springframework.context.annotation.Scope;
-import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.stereotype.Component;
-import org.springframework.web.context.WebApplicationContext;
 
 import java.time.Instant;
 
@@ -14,7 +11,7 @@ public class EventoUsuario {
     private String senderId;
     private String recipientId;
     private Instant timestamp;
-    private TipoManifestacaoEnum tipoManifestacao;
+    private TipoManifestacao tipoManifestacao;
 
     public String getSenderId() {
         return senderId;
@@ -40,11 +37,11 @@ public class EventoUsuario {
         this.timestamp = timestamp;
     }
 
-    public TipoManifestacaoEnum getTipoManifestacao() {
+    public TipoManifestacao getTipoManifestacao() {
         return tipoManifestacao;
     }
 
-    public void setTipoManifestacao(TipoManifestacaoEnum tipoManifestacao) {
+    public void setTipoManifestacao(TipoManifestacao tipoManifestacao) {
         this.tipoManifestacao = tipoManifestacao;
     }
 
