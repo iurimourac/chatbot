@@ -116,11 +116,20 @@
 
     <profiles>
         <profile>
+            <id>local</id>
+            <properties>
+                <aplicacao.url>http://localhost:8080</aplicacao.url>
+            </properties>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+        </profile>
+
+        <profile>
             <id>hom</id>
             <properties>
+                <aplicacao.url>http:/chatboteouv-h.cgu.gov.br</aplicacao.url>
                 <profiles.spring>http,banco-hom</profiles.spring>
-                <kubectl.rc.name>chatbot-e-ouv</kubectl.rc.name>
-                <kubectl.rc.volumeClaimName>nfs-claim-chatbot-e-ouv-h</kubectl.rc.volumeClaimName>
             </properties>
         </profile>
     </profiles>
