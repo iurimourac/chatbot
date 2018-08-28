@@ -88,19 +88,19 @@ public class IntegracaoMessengerService {
      * Cria elemento com botão(ões) postback.
      * @param titulo
      * @param subtitulo (opcional)
-     * @param urlImagem (opcional)
+     * @param nomeArquivoImagem (opcional)
      * @param botoes - máximo de 3 botões (opcional)
      * @return elemento - Element
      */
     public static Element criarElementoComBotaoPostback(String titulo, Optional<String> subtitulo,
-                                                        Optional<String> urlImagem, Optional<List<PostbackButton>> botoes) {
+                                                        Optional<String> nomeArquivoImagem, Optional<List<PostbackButton>> botoes) {
         try {
             Optional<List<Button>> listaBotoes = empty();
             if (botoes.isPresent()) {
                 validarListaDeBotoes(botoes.get());
                 listaBotoes = of(new ArrayList<>(botoes.get()));
             }
-            return Element.create(titulo, subtitulo, urlImagem.isPresent() ? of(new URL(urlImagensAplicacao + urlImagem.get())) : empty(),
+            return Element.create(titulo, subtitulo, nomeArquivoImagem.isPresent() ? of(new URL(urlImagensAplicacao + nomeArquivoImagem.get())) : empty(),
                     empty(), listaBotoes);
         } catch (MalformedURLException e) {
             throw new IllegalArgumentException("URL do elemento inválida!");

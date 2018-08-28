@@ -27,18 +27,18 @@ public class EtapaTipoManifestacaoBuilder {
                 "Por aqui, posso te ajudar a registrar uma manifestação para as Ouvidorias do Governo Federal. " +
                 "Gostaria de registrar qual tipo?",
                 of(Arrays.asList(
-                        criarElementoComBotaoPostback(DENUNCIA.getDescricao(), empty(), of("linkDenuncia.png"),
-                                getBotaoRegistrar(DENUNCIA.getDescricao())),
-                        criarElementoComBotaoPostback(RECLAMACAO.getDescricao(), empty(), of("linkReclamacao.png"),
-                                getBotaoRegistrar(RECLAMACAO.getDescricao())),
-                        criarElementoComBotaoPostback(SOLICITACAO.getDescricao(), empty(), of("linkSolicitacao.png"),
-                                getBotaoRegistrar(SOLICITACAO.getDescricao())),
-                        criarElementoComBotaoPostback(SUGESTAO.getDescricao(), empty(), of("linkSugestao.png"),
-                                getBotaoRegistrar(SUGESTAO.getDescricao())),
-                        criarElementoComBotaoPostback(ELOGIO.getDescricao(), empty(), of("linkElogio.png"),
-                                getBotaoRegistrar(ELOGIO.getDescricao())),
-                        criarElementoComBotaoPostback(SIMPLIFIQUE.getDescricao(), empty(), of("linkSimplifique.png"),
-                                getBotaoRegistrar(SIMPLIFIQUE.getDescricao()))
+                        criarElementoComBotaoPostback(DENUNCIA.getDescricao(), of("Clique no botão abaixo para registrar uma " + DENUNCIA.getDescricao()),
+                                of("linkDenuncia.png"), of(criarBotoesPostback(singletonList(DENUNCIA.getDescricao())))),
+                        criarElementoComBotaoPostback(RECLAMACAO.getDescricao(), of("Clique no botão abaixo para registrar uma " + RECLAMACAO.getDescricao()),
+                                of("linkReclamacao.png"), of(criarBotoesPostback(singletonList(RECLAMACAO.getDescricao())))),
+                        criarElementoComBotaoPostback(SOLICITACAO.getDescricao(), of("Clique no botão abaixo para registrar uma " + SOLICITACAO.getDescricao()),
+                                of("linkSolicitacao.png"), of(criarBotoesPostback(singletonList(SOLICITACAO.getDescricao())))),
+                        criarElementoComBotaoPostback(SUGESTAO.getDescricao(), of("Clique no botão abaixo para registrar uma " + SUGESTAO.getDescricao()),
+                                of("linkSugestao.png"), of(criarBotoesPostback(singletonList(SUGESTAO.getDescricao())))),
+                        criarElementoComBotaoPostback(ELOGIO.getDescricao(), of("Clique no botão abaixo para registrar um " + ELOGIO.getDescricao()),
+                                of("linkElogio.png"), of(criarBotoesPostback(singletonList(ELOGIO.getDescricao())))),
+                        criarElementoComBotaoPostback(SIMPLIFIQUE.getDescricao(), of("Clique no botão abaixo para registrar uma solicitação de simplificação"),
+                                of("linkSimplifique.png"), of(criarBotoesPostback(singletonList(SIMPLIFIQUE.getDescricao()))))
                 )),
                 TipoInteracao.PERGUNTA_COM_SELECAO_DE_ELEMENTO_GENERICO);
     }
@@ -51,6 +51,6 @@ public class EtapaTipoManifestacaoBuilder {
     }
 
     private static Optional<List<PostbackButton>> getBotaoRegistrar(String tipo) {
-        return of(criarBotoesPostback(singletonList("Registrar " + tipo)));
+        return of(criarBotoesPostback(singletonList(tipo)));
     }
 }
