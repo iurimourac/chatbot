@@ -119,6 +119,7 @@ public class GerenciadorDeInteracaoUsuario {
 
     private void enviarApresentacaoInicial() {
         try {
+            logger.debug("Apresentação inicial...");
             EtapaTipoManifestacao etapaInicial = EtapaTipoManifestacaoBuilder.getEtapaInicial();
             etapaInicial.getTipoInteracao().processar(interacaoUsuario.getSenderId(), etapaInicial.getDescricao(), etapaInicial.getOpcoes());
             interacaoUsuario.setUltimaEtapaInteracaoProcessada(etapaInicial);
@@ -127,7 +128,7 @@ public class GerenciadorDeInteracaoUsuario {
         }
     }
 
-    private void tratarEventoDeRetornoDoUsuario(Event event) throws MessengerApiException, MessengerIOException {
+    private void tratarEventoDeRetornoDoUsuario(Event event) {
         logger.debug("Tratando evento: event: {}, title: {}, payload: {}", event, event.asPostbackEvent().title(), event.asPostbackEvent().payload());
         PostbackEvent postbackEvent = event.asPostbackEvent();
         if (event == null || StringUtils.isBlank(postbackEvent.title()) || !postbackEvent.payload().isPresent()) {
