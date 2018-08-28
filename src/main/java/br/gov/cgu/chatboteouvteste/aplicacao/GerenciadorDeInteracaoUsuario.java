@@ -96,7 +96,6 @@ public class GerenciadorDeInteracaoUsuario {
                     if (interacaoUsuario.isNovoEventoUsuario()) {
                         interacaoUsuario.setTipoManifestacao(TipoManifestacao.get(event.asPostbackEvent().title()));
                     }
-                    processarProximaEtapa();
                     handlePostbackEvent(event.asPostbackEvent());
                 } else if (event.isAccountLinkingEvent()) {
                     handleAccountLinkingEvent(event.asAccountLinkingEvent());
@@ -111,6 +110,7 @@ public class GerenciadorDeInteracaoUsuario {
                 } else {
                     handleFallbackEvent(event);
                 }
+                processarProximaEtapa();
             }
             logger.debug("Depois tratamento de evento: {}", interacoesUsuarios);
         } catch (MessengerApiException | MessengerIOException | MalformedURLException e) {
