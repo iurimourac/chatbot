@@ -30,7 +30,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static br.gov.cgu.chatboteouvteste.Constantes.TIPO_PAYLOAD_BOTAO_POSTBACK;
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
 
@@ -38,7 +37,6 @@ import static java.util.Optional.of;
 public class IntegracaoMessengerService {
 
     private static final String TIPO_PAYLOAD_BOTAO_POSTBACK = "DEVELOPER_DEFINED_PAYLOAD";
-    private static final String TIPO_PAYLOAD_SELECAO_TIPO_MANIFESTACAO = "SELECAO_TIPO_MANIFESTACAO";
     private static final String TIPO_PAYLOAD_MENSAGEM_TEXTO = "DEVELOPER_DEFINED_METADATA";
 
     private static String urlImagensAplicacao;
@@ -61,8 +59,20 @@ public class IntegracaoMessengerService {
      * @return lista de botões - List<PostbackButton>
      */
     public static List<PostbackButton> criarBotoesPostback(List<String> opcoes) {
+        return criarBotoesPostback(opcoes, of(TIPO_PAYLOAD_BOTAO_POSTBACK));
+    }
+
+    /**
+     * Cria botões de postback (máximo de 3 opções).
+     * @param opcoes - list<String>: texto dos botões
+     * @param tipoPayload
+     * @return lista de botões - List<PostbackButton>
+     */
+    public static List<PostbackButton> criarBotoesPostback(List<String> opcoes, Optional<String> tipoPayload) {
         validarListaDeBotoes(opcoes);
-        return opcoes.stream().map(x -> PostbackButton.create(x, TIPO_PAYLOAD_BOTAO_POSTBACK)).collect(Collectors.toList());
+        return opcoes.stream()
+                .map(x -> PostbackButton.create(x, tipoPayload.isPresent() ? tipoPayload.get() : TIPO_PAYLOAD_BOTAO_POSTBACK))
+                .collect(Collectors.toList());
     }
 
     /**

@@ -96,7 +96,8 @@ public enum TipoManifestacao {
         }
         final Integer idUltimaEtapa = ++idEtapa;
         return etapas.stream().filter(x -> x.getId().equals(idUltimaEtapa)).findFirst()
-                .orElse(EtapaTipoManifestacaoBuilder.getEtapaFinal());
+//                .orElse(EtapaTipoManifestacaoBuilder.getEtapaFinal());
+                .orElse(null);
     }
 
     public boolean isTodasEtapasProcessadas(Integer idEtapa) {

@@ -28,6 +28,16 @@ public enum TipoInteracao {
         }
     },
 
+    RECOMECAR {
+        @Override
+        public void processar(String recipientId, String texto, Optional<List> opcoes, Optional<String>... parametros)
+                throws MessengerApiException, MessengerIOException {
+            validarParametros(recipientId, texto, parametros);
+            IntegracaoMessengerService.validarListaDeBotoes(opcoes != null && opcoes.isPresent() ? opcoes.get() : null);
+            IntegracaoMessengerService.enviarMensagemDeBotoes(recipientId, texto, opcoes.get());
+        }
+    },
+
     PERGUNTA_COM_SELECAO_DE_BOTAO {
         @Override
         public void processar(String recipientId, String texto, Optional<List> opcoes, Optional<String>... parametros)
@@ -59,12 +69,20 @@ public enum TipoInteracao {
     };
 
 
+
+    public static final String TIPO_PAYLOAD_SELECAO_TIPO_MANIFESTACAO = "SELECAO_TIPO_MANIFESTACAO";
+    public static final String TIPO_PAYLOAD_RECOMECAR = "SELECAO_RECOMECAR";
+
     public abstract void processar(String recipientId, String texto, Optional<List> opcoes, Optional<String>... parametros)
             throws MessengerApiException, MessengerIOException;
 
     void processarMensagemDeTexto(String recipientId, String texto, Optional<String>[] parametros) throws MessengerApiException, MessengerIOException {
             validarParametros(recipientId, texto, parametros);
             IntegracaoMessengerService.enviarMensagemDeTexto(recipientId, texto);
+    }
+
+    void processarMensagemDeBotao() {
+
     }
 
     void validarParametros(String recipientId, String texto, Optional<String>[] parametros) {
