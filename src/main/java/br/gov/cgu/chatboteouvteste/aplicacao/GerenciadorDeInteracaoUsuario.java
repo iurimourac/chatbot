@@ -56,6 +56,7 @@ public class GerenciadorDeInteracaoUsuario {
     private static final String RESOURCE_URL = "https://raw.githubusercontent.com/fbsamples/messenger-platform-samples/master/node/public";
 
     private InteracaoUsuario interacaoUsuario;
+    private StringBuilder descricaoManifestacao;
 
     private final Messenger messenger;
     private InteracoesUsuarios interacoesUsuarios;
@@ -84,14 +85,19 @@ public class GerenciadorDeInteracaoUsuario {
                 enviarApresentacaoInicial();
             } else {
                 if (event.isTextMessageEvent()) {
+                    if (interacaoUsuario.isMultiplasRespostas()) {
+                        descricaoManifestacao.append(event.asTextMessageEvent().text()).append(" ");
+                    } else {
+                        processarProximaEtapa();
+                    }
                     handleTextMessageEvent(event.asTextMessageEvent());
                 } else if (event.isQuickReplyMessageEvent()) {
                     handleQuickReplyMessageEvent(event.asQuickReplyMessageEvent());
                 } else if (event.isPostbackEvent()) {
                     tratarEventoDeRetornoDoUsuario(event);
+                    processarProximaEtapa();
                     handlePostbackEvent(event.asPostbackEvent());
                 }
-                processarProximaEtapa();
             }
             logger.debug("Depois tratamento de evento: {}", interacoesUsuarios);
         } catch (MessengerApiException | MessengerIOException e) {
@@ -110,32 +116,6 @@ public class GerenciadorDeInteracaoUsuario {
         }
         logger.debug("montarInteracaoUsuario: {}", interacaoUsuario);
     }
-
-/*
-    private void enviarApresentacaoInicial(String recipientId) throws MessengerApiException, MessengerIOException, MalformedURLException {
-        final List<Button> buttons = Arrays.asList(
-                PostbackButton.create("Denúncia", "DEVELOPER_DEFINED_PAYLOAD"),
-//                PostbackButton.create("Reclamação", "DEVELOPER_DEFINED_PAYLOAD"),
-//                PostbackButton.create("Solicitação", "DEVELOPER_DEFINED_PAYLOAD"),
-//                PostbackButton.create("Sugestão", "DEVELOPER_DEFINED_PAYLOAD"),
-                PostbackButton.create("Elogio", "DEVELOPER_DEFINED_PAYLOAD"),
-                PostbackButton.create("Simplifique", "DEVELOPER_DEFINED_PAYLOAD")
-        );
-
-//        final String mensagemBoasVindas = "Olá! Eu sou o \"Chico Bot\", o robô Ouvidor! " +
-//                "Por aqui, posso te ajudar a registrar uma denúncia, uma reclamação, uma solicitação, " +
-//                "uma sugestão, um elogio ou até mesmo um pedido de simplificação de serviço público " +
-//                "para as Ouvidorias do Governo Federal. Gostaria de fazer uma dessas manifestações? ";
-        final String mensagemBoasVindas = "Olá! Eu sou o \"Chico Bot\", o robô Ouvidor! " +
-                "Por aqui, posso te ajudar a registrar uma manifestação para as Ouvidorias do Governo Federal. " +
-                "Gostaria de registrar qual tipo?";
-
-        final ButtonTemplate buttonTemplate = ButtonTemplate.create(mensagemBoasVindas, buttons);
-        final TemplateMessage templateMessage = TemplateMessage.create(buttonTemplate);
-        final MessagePayload messagePayload = MessagePayload.create(recipientId, MessagingType.RESPONSE, templateMessage);
-        this.messenger.send(messagePayload);
-    }
-*/
 
     private void enviarApresentacaoInicial() {
         try {
@@ -173,11 +153,17 @@ public class GerenciadorDeInteracaoUsuario {
             }
         }
     }
+
     private void processarProximaEtapa(Optional<String>... parametros) throws MessengerApiException, MessengerIOException {
         logger.debug("Processando próxima etapa...");
         validarDadosDeInteracaoUsuario();
 
         EtapaTipoManifestacao etapa = interacaoUsuario.getTipoManifestacao().getProximaEtapa(interacaoUsuario.getUltimaEtapaInteracaoProcessada().getId());
+
+        if (etapa.isRegistrarManifestacao()) {
+            //TODO Implementar chamada ao webservice
+        }
+
         etapa.processar(interacaoUsuario.getSenderId(), Optional.empty());
         interacaoUsuario.setUltimaEtapaInteracaoProcessada(etapa);
 

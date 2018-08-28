@@ -59,6 +59,11 @@ public class InteracaoUsuario {
                 && tipoManifestacao.isTodasEtapasProcessadas(ultimaEtapaInteracaoProcessada.getId());
     }
 
+    public boolean isMultiplasRespostas() {
+        return ultimaEtapaInteracaoProcessada.getTipoInteracao().equals(TipoInteracao.PERGUNTA_COM_MULTIPLAS_RESPOSTAS)
+                || ultimaEtapaInteracaoProcessada.getTipoInteracao().equals(TipoInteracao.PERGUNTA_COM_SELECAO_DE_BOTAO_PARA_MULTIPLAS_RESPOSTAS);
+    }
+
     @Override
     public String toString() {
         return "InteracaoUsuario{" +

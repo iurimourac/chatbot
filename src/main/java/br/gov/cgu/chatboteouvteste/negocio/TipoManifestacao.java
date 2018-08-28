@@ -1,12 +1,10 @@
 package br.gov.cgu.chatboteouvteste.negocio;
 
-import br.gov.cgu.chatboteouvteste.aplicacao.EtapaTipoManifestacaoBuilder;
 import br.gov.cgu.chatboteouvteste.aplicacao.IntegracaoMessengerService;
 
 import java.util.*;
 
-import static br.gov.cgu.chatboteouvteste.negocio.TipoInteracao.PERGUNTA_COM_RESPOSTA_DESCRITIVA;
-import static br.gov.cgu.chatboteouvteste.negocio.TipoInteracao.PERGUNTA_COM_SELECAO_DE_BOTAO;
+import static br.gov.cgu.chatboteouvteste.negocio.TipoInteracao.*;
 import static java.util.Collections.singletonList;
 import static java.util.Optional.of;
 
@@ -20,14 +18,14 @@ public enum TipoManifestacao {
             new EtapaTipoManifestacao(1, "Certo. Vejo que você quer fazer uma reclamação. Para qual órgão público você deseja que eu envie sua reclamação?",
                     PERGUNTA_COM_RESPOSTA_DESCRITIVA),
             new EtapaTipoManifestacao(2, "Agora, por favor, me explique direitinho sua reclamação.",
-                    PERGUNTA_COM_RESPOSTA_DESCRITIVA),
+                    PERGUNTA_COM_MULTIPLAS_RESPOSTAS),
             new EtapaTipoManifestacao(3, "Estou anotando, pode continuar. Quando tiver terminado, pressione “Encerrar”.",
                     of(IntegracaoMessengerService.criarBotoesPostback(singletonList("Encerrar"))),
-                    PERGUNTA_COM_SELECAO_DE_BOTAO),
+                    PERGUNTA_COM_SELECAO_DE_BOTAO_PARA_MULTIPLAS_RESPOSTAS),
             new EtapaTipoManifestacao(4, "Obrigada por se manifestar! Registrei sua reclamação com o número de protocolo {:X}. " +
                     "Se quiser acompanhar o andamento, clique no botão a seguir e informe seu e-mail e o número de protocolo fornecido.",
                     montarBotaoAcompanhamentoManifestacaoEouv(),
-                    PERGUNTA_COM_SELECAO_DE_BOTAO)
+                    PERGUNTA_COM_SELECAO_DE_BOTAO, true)
     )),
 
     SOLICITACAO("Solicitação", Arrays.asList(
@@ -41,7 +39,7 @@ public enum TipoManifestacao {
             new EtapaTipoManifestacao(4, "Obrigada por se manifestar! Registrei sua solicitação com o número de protocolo {:X}. " +
                     "Se quiser acompanhar o andamento, clique no botão a seguir e informe seu e-mail e o número de protocolo fornecido.",
                     montarBotaoAcompanhamentoManifestacaoEouv(),
-                    PERGUNTA_COM_SELECAO_DE_BOTAO)
+                    PERGUNTA_COM_SELECAO_DE_BOTAO, true)
     )),
 
     SUGESTAO("Sugestão", Arrays.asList(
@@ -55,7 +53,7 @@ public enum TipoManifestacao {
             new EtapaTipoManifestacao(4, "Obrigada por se manifestar! Registrei sua sugestão com o número de protocolo {:X}. " +
                     "Se quiser acompanhar o andamento, clique no botão a seguir e informe seu e-mail e o número de protocolo fornecido.",
                     montarBotaoAcompanhamentoManifestacaoEouv(),
-                    PERGUNTA_COM_SELECAO_DE_BOTAO)
+                    PERGUNTA_COM_SELECAO_DE_BOTAO, true)
     )),
 
     ELOGIO("Elogio", Arrays.asList(
@@ -69,7 +67,7 @@ public enum TipoManifestacao {
             new EtapaTipoManifestacao(4, "Obrigada pela seu elogio! Registrei seu elogio com o número de protocolo {:X}. " +
                     "Se quiser acompanhar o andamento, clique no botão a seguir e informe seu e-mail e o número de protocolo fornecido.",
                     montarBotaoAcompanhamentoManifestacaoEouv(),
-                    PERGUNTA_COM_SELECAO_DE_BOTAO)
+                    PERGUNTA_COM_SELECAO_DE_BOTAO, true)
     )),
 
     SIMPLIFIQUE("Simplifique", Arrays.asList(

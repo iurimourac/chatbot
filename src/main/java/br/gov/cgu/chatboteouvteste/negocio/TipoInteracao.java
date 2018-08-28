@@ -8,7 +8,6 @@ import org.apache.commons.lang3.StringUtils;
 import java.util.List;
 import java.util.Optional;
 
-import static java.util.Optional.empty;
 import static java.util.Optional.ofNullable;
 
 public enum TipoInteracao {
@@ -29,23 +28,28 @@ public enum TipoInteracao {
         }
     },
 
-//    RECOMECAR {
-//        @Override
-//        public void processar(String recipientId, String texto, Optional<List> opcoes, Optional<String>... parametros)
-//                throws MessengerApiException, MessengerIOException {
-//            validarParametros(recipientId, texto, parametros);
-//            IntegracaoMessengerService.validarListaDeBotoes(opcoes != null && opcoes.isPresent() ? opcoes.get() : null);
-//            IntegracaoMessengerService.enviarMensagemDeBotoes(recipientId, texto, opcoes.get());
-//        }
-//    },
+    PERGUNTA_COM_MULTIPLAS_RESPOSTAS {
+        @Override
+        public void processar(String recipientId, String texto, Optional<List> opcoes, Optional<String>... parametros)
+                throws MessengerApiException, MessengerIOException {
+            processarMensagemDeTexto(recipientId, texto, parametros);
+        }
+    },
+
+    PERGUNTA_COM_SELECAO_DE_BOTAO_PARA_MULTIPLAS_RESPOSTAS {
+        @Override
+        public void processar(String recipientId, String texto, Optional<List> opcoes, Optional<String>... parametros)
+                throws MessengerApiException, MessengerIOException {
+            processarMensagemDeBotao(recipientId, texto, opcoes, parametros);
+        }
+    },
 
     PERGUNTA_COM_SELECAO_DE_BOTAO {
         @Override
         public void processar(String recipientId, String texto, Optional<List> opcoes, Optional<String>... parametros)
                 throws MessengerApiException, MessengerIOException {
-            validarParametros(recipientId, texto, parametros);
-            IntegracaoMessengerService.validarListaDeBotoes(opcoes != null && opcoes.isPresent() ? opcoes.get() : null);
-            IntegracaoMessengerService.enviarMensagemDeBotoes(recipientId, texto, opcoes.get());
+            //TODO Parse dos parametros no texto
+            processarMensagemDeBotao(recipientId, texto, opcoes, parametros);
         }
     },
 
@@ -82,8 +86,11 @@ public enum TipoInteracao {
             IntegracaoMessengerService.enviarMensagemDeTexto(recipientId, texto);
     }
 
-    void processarMensagemDeBotao() {
-
+    void processarMensagemDeBotao(String recipientId, String texto, Optional<List> opcoes, Optional<String>[] parametros)
+            throws MessengerApiException, MessengerIOException {
+        validarParametros(recipientId, texto, parametros);
+        IntegracaoMessengerService.validarListaDeBotoes(opcoes != null && opcoes.isPresent() ? opcoes.get() : null);
+        IntegracaoMessengerService.enviarMensagemDeBotoes(recipientId, texto, opcoes.get());
     }
 
     void validarParametros(String recipientId, String texto, Optional<String>[] parametros) {

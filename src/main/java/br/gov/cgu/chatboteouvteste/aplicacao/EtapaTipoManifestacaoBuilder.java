@@ -50,8 +50,6 @@ public class EtapaTipoManifestacaoBuilder {
     public static EtapaTipoManifestacao getEtapaFinal() {
         return new EtapaTipoManifestacao(ID_ETAPA_FINAL, "Sempre que você precisar falar com alguma Ouvidoria, lembre-se de mim. " +
                 "Caso você queira fazer mais alguma manifestação, basta clicar em começar.",
-//                of(criarBotoesPostback(singletonList("Começar"), of(TipoInteracao.TIPO_PAYLOAD_RECOMECAR))),
-//                TipoInteracao.RECOMECAR);
                 of(criarBotoesPostback(singletonList("Começar"))),
                 TipoInteracao.PERGUNTA_COM_SELECAO_DE_BOTAO);
     }
