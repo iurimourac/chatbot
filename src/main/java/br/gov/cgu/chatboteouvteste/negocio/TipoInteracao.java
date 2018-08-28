@@ -8,6 +8,7 @@ import org.apache.commons.lang3.StringUtils;
 import java.util.List;
 import java.util.Optional;
 
+import static java.util.Optional.empty;
 import static java.util.Optional.ofNullable;
 
 public enum TipoInteracao {
@@ -34,7 +35,7 @@ public enum TipoInteracao {
                 throws MessengerApiException, MessengerIOException {
             validarParametros(recipientId, texto, parametros);
             IntegracaoMessengerService.validarListaDeBotoes(opcoes != null && opcoes.isPresent() ? opcoes.get() : null);
-            IntegracaoMessengerService.enviarMensagemDeBotoes(recipientId, texto, opcoes.get());
+            processarMensagemDeTexto(recipientId, "Certo. Vamos registrar uma nova manifestação.", null);
         }
     },
 

@@ -1,9 +1,6 @@
 package br.gov.cgu.chatboteouvteste.aplicacao;
 
-import br.gov.cgu.chatboteouvteste.negocio.EtapaTipoManifestacao;
-import br.gov.cgu.chatboteouvteste.negocio.InteracaoUsuario;
-import br.gov.cgu.chatboteouvteste.negocio.TipoManifestacao;
-import br.gov.cgu.chatboteouvteste.negocio.TipoManifestacaoInvalidoException;
+import br.gov.cgu.chatboteouvteste.negocio.*;
 import com.github.messenger4j.Messenger;
 import com.github.messenger4j.common.WebviewHeightRatio;
 import com.github.messenger4j.exception.MessengerApiException;
@@ -84,7 +81,7 @@ public class GerenciadorDeInteracaoUsuario {
 
         try {
             if (isNovaInteracao) {
-                enviarApresentacaoInicial(interacaoUsuario.getSenderId());
+                enviarApresentacaoInicial();
             } else {
                 if (event.isTextMessageEvent()) {
                     handleTextMessageEvent(event.asTextMessageEvent());
@@ -97,7 +94,7 @@ public class GerenciadorDeInteracaoUsuario {
                 processarProximaEtapa();
             }
             logger.debug("Depois tratamento de evento: {}", interacoesUsuarios);
-        } catch (MessengerApiException | MessengerIOException | MalformedURLException e) {
+        } catch (MessengerApiException | MessengerIOException e) {
             handleSendException(e);
         }
     }
@@ -114,8 +111,8 @@ public class GerenciadorDeInteracaoUsuario {
         logger.debug("montarInteracaoUsuario: {}", interacaoUsuario);
     }
 
-    private void enviarApresentacaoInicial(String recipientId) throws MessengerApiException, MessengerIOException, MalformedURLException {
 /*
+    private void enviarApresentacaoInicial(String recipientId) throws MessengerApiException, MessengerIOException, MalformedURLException {
         final List<Button> buttons = Arrays.asList(
                 PostbackButton.create("Denúncia", "DEVELOPER_DEFINED_PAYLOAD"),
 //                PostbackButton.create("Reclamação", "DEVELOPER_DEFINED_PAYLOAD"),
@@ -137,8 +134,10 @@ public class GerenciadorDeInteracaoUsuario {
         final TemplateMessage templateMessage = TemplateMessage.create(buttonTemplate);
         final MessagePayload messagePayload = MessagePayload.create(recipientId, MessagingType.RESPONSE, templateMessage);
         this.messenger.send(messagePayload);
+    }
 */
 
+    private void enviarApresentacaoInicial() {
         try {
             EtapaTipoManifestacao etapaInicial = EtapaTipoManifestacaoBuilder.getEtapaInicial();
             etapaInicial.getTipoInteracao().processar(interacaoUsuario.getSenderId(), etapaInicial.getDescricao(), etapaInicial.getOpcoes());
@@ -148,7 +147,7 @@ public class GerenciadorDeInteracaoUsuario {
         }
     }
 
-    private void tratarEventoDeRetornoDoUsuario(Event event) {
+    private void tratarEventoDeRetornoDoUsuario(Event event) throws MessengerApiException, MessengerIOException {
         PostbackEvent postbackEvent = event.asPostbackEvent();
         if (event == null || StringUtils.isBlank(postbackEvent.title()) || !postbackEvent.payload().isPresent()) {
             throw new EventoPostbackInvalidoException();
@@ -159,8 +158,14 @@ public class GerenciadorDeInteracaoUsuario {
             throw new EventoPostbackInvalidoException();
         }
 
-        if (interacaoUsuario.isNovoEventoUsuario() || postbackEvent.payload().isPresent()) {
+        boolean isNovaManifestacao = postbackEvent.payload().get().equals(TipoInteracao.TIPO_PAYLOAD_SELECAO_TIPO_MANIFESTACAO);
+        if (interacaoUsuario.isNovoEventoUsuario() || isNovaManifestacao) {
             interacaoUsuario.setTipoManifestacao(tipoManifestacao);
+        }
+
+        if (isNovaManifestacao) {
+            interacaoUsuario.setUltimaEtapaInteracaoProcessada(EtapaTipoManifestacaoBuilder.getEtapaInicial());
+            processarProximaEtapa(empty());
         }
     }
     private void processarProximaEtapa(Optional<String>... parametros) throws MessengerApiException, MessengerIOException {
