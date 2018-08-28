@@ -118,7 +118,8 @@
         <profile>
             <id>local</id>
             <properties>
-                <aplicacao.url>http://localhost:8080</aplicacao.url>
+                <!--<aplicacao.url>http://localhost:8080</aplicacao.url>-->
+                <aplicacao.url>https://chatboteouvteste.herokuapp.com</aplicacao.url>
             </properties>
             <activation>
                 <activeByDefault>true</activeByDefault>
