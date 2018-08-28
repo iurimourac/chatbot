@@ -29,15 +29,15 @@ public enum TipoInteracao {
         }
     },
 
-    RECOMECAR {
-        @Override
-        public void processar(String recipientId, String texto, Optional<List> opcoes, Optional<String>... parametros)
-                throws MessengerApiException, MessengerIOException {
-            validarParametros(recipientId, texto, parametros);
-            IntegracaoMessengerService.validarListaDeBotoes(opcoes != null && opcoes.isPresent() ? opcoes.get() : null);
-            processarMensagemDeTexto(recipientId, "Certo. Vamos registrar uma nova manifestação.", null);
-        }
-    },
+//    RECOMECAR {
+//        @Override
+//        public void processar(String recipientId, String texto, Optional<List> opcoes, Optional<String>... parametros)
+//                throws MessengerApiException, MessengerIOException {
+//            validarParametros(recipientId, texto, parametros);
+//            IntegracaoMessengerService.validarListaDeBotoes(opcoes != null && opcoes.isPresent() ? opcoes.get() : null);
+//            IntegracaoMessengerService.enviarMensagemDeBotoes(recipientId, texto, opcoes.get());
+//        }
+//    },
 
     PERGUNTA_COM_SELECAO_DE_BOTAO {
         @Override

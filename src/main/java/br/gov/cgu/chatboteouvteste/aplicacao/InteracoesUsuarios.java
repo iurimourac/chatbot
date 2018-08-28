@@ -39,4 +39,8 @@ public class InteracoesUsuarios {
                 "interacoes=" + interacoes +
                 '}';
     }
+
+    public void remover(InteracaoUsuario interacaoUsuario) {
+        interacoes.remove(interacaoUsuario);
+    }
 }

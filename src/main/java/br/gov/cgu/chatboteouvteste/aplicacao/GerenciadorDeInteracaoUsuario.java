@@ -185,6 +185,7 @@ public class GerenciadorDeInteracaoUsuario {
             logger.debug("Todas as etapas foram processadas. Processando a etapa final...");
             etapa = EtapaTipoManifestacaoBuilder.getEtapaFinal();
             etapa.processar(interacaoUsuario.getSenderId());
+            interacoesUsuarios.remover(interacaoUsuario);
         }
     }
 
