@@ -158,14 +158,11 @@ public class GerenciadorDeInteracaoUsuario {
             throw new EventoPostbackInvalidoException();
         }
 
-        boolean isNovaManifestacao = postbackEvent.payload().get().equals(TipoInteracao.TIPO_PAYLOAD_SELECAO_TIPO_MANIFESTACAO);
-        if (interacaoUsuario.isNovoEventoUsuario() || isNovaManifestacao) {
+        if (interacaoUsuario.isNovoEventoUsuario()) {
             interacaoUsuario.setTipoManifestacao(tipoManifestacao);
-        }
-
-        if (isNovaManifestacao) {
+        } else if (postbackEvent.payload().get().equals(TipoInteracao.TIPO_PAYLOAD_SELECAO_TIPO_MANIFESTACAO)) {
+            interacaoUsuario.setTipoManifestacao(tipoManifestacao);
             interacaoUsuario.setUltimaEtapaInteracaoProcessada(EtapaTipoManifestacaoBuilder.getEtapaInicial());
-            processarProximaEtapa(empty());
         }
     }
     private void processarProximaEtapa(Optional<String>... parametros) throws MessengerApiException, MessengerIOException {
