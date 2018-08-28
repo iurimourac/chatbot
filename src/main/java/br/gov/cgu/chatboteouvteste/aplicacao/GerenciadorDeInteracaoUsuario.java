@@ -96,6 +96,7 @@ public class GerenciadorDeInteracaoUsuario {
                 } else if (event.isPostbackEvent()) {
                     // [CGU]
                     if (interacaoUsuario.isNovoEventoUsuario()) {
+                        logger.debug("");
                         interacaoUsuario.setTipoManifestacao(TipoManifestacao.get(event.asPostbackEvent().title()));
                     }
                     handlePostbackEvent(event.asPostbackEvent());
@@ -113,6 +114,7 @@ public class GerenciadorDeInteracaoUsuario {
                     handleFallbackEvent(event);
                 }
             }
+            logger.debug("Depois tratamento de evento: {}", interacoesUsuarios);
         } catch (MessengerApiException | MessengerIOException | MalformedURLException e) {
             handleSendException(e);
         }
