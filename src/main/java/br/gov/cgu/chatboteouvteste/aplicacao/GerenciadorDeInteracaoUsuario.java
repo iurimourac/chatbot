@@ -148,23 +148,29 @@ public class GerenciadorDeInteracaoUsuario {
     }
 
     private void tratarEventoDeRetornoDoUsuario(Event event) throws MessengerApiException, MessengerIOException {
+        logger.debug("Tratando evento: event: {}, title: {}, payload: {}", event, event.asPostbackEvent().title(), event.asPostbackEvent().payload());
         PostbackEvent postbackEvent = event.asPostbackEvent();
         if (event == null || StringUtils.isBlank(postbackEvent.title()) || !postbackEvent.payload().isPresent()) {
             throw new EventoPostbackInvalidoException();
         }
 
-        TipoManifestacao tipoManifestacao = TipoManifestacao.get(postbackEvent.title());
-        if (tipoManifestacao == null) {
-            throw new EventoPostbackInvalidoException();
-        }
+        boolean isNovaSelecaoDeTipoDeManifestacao = postbackEvent.payload().get().equals(TipoInteracao.TIPO_PAYLOAD_SELECAO_TIPO_MANIFESTACAO);
+        if (isNovaSelecaoDeTipoDeManifestacao) {
+            TipoManifestacao tipoManifestacao = TipoManifestacao.get(postbackEvent.title());
+            if (tipoManifestacao == null) {
+                throw new EventoPostbackInvalidoException();
+            }
 
-        if (interacaoUsuario.isNovoEventoUsuario()) {
-            logger.debug("Nova interação de usuário");
-            interacaoUsuario.setTipoManifestacao(tipoManifestacao);
-        } else if (postbackEvent.payload().get().equals(TipoInteracao.TIPO_PAYLOAD_SELECAO_TIPO_MANIFESTACAO)) {
-            logger.debug("Seleção de novo tipo de manifestação. Usuário já tinha selecionado outra antes.");
-            interacaoUsuario.setTipoManifestacao(tipoManifestacao);
-            interacaoUsuario.setUltimaEtapaInteracaoProcessada(EtapaTipoManifestacaoBuilder.getEtapaInicial());
+            if (interacaoUsuario.isNovoEventoUsuario()) {
+                logger.debug("Nova interação de usuário");
+                interacaoUsuario.setTipoManifestacao(tipoManifestacao);
+            } else {
+                if (isNovaSelecaoDeTipoDeManifestacao) {
+                    logger.debug("Seleção de novo tipo de manifestação. Usuário já tinha selecionado outra antes.");
+                    interacaoUsuario.setTipoManifestacao(tipoManifestacao);
+                    interacaoUsuario.setUltimaEtapaInteracaoProcessada(EtapaTipoManifestacaoBuilder.getEtapaInicial());
+                }
+            }
         }
     }
     private void processarProximaEtapa(Optional<String>... parametros) throws MessengerApiException, MessengerIOException {
