@@ -1,5 +1,6 @@
 package br.gov.cgu.chatboteouvteste.aplicacao;
 
+import br.gov.cgu.chatboteouvteste.negocio.EtapaTipoManifestacao;
 import br.gov.cgu.chatboteouvteste.negocio.InteracaoUsuario;
 import br.gov.cgu.chatboteouvteste.negocio.TipoManifestacao;
 import com.github.messenger4j.Messenger;
@@ -58,6 +59,8 @@ public class GerenciadorDeInteracaoUsuario {
     private final Logger logger = LoggerFactory.getLogger(GerenciadorDeInteracaoUsuario.class);
     private static final String RESOURCE_URL = "https://raw.githubusercontent.com/fbsamples/messenger-platform-samples/master/node/public";
 
+    private InteracaoUsuario interacaoUsuario;
+
     private final Messenger messenger;
     private InteracoesUsuarios interacoesUsuarios;
 
@@ -74,11 +77,11 @@ public class GerenciadorDeInteracaoUsuario {
     }
 
     public void processarEvento(Event event) {
-        logger.debug("Antes sincronização: {}", interacoesUsuarios.toString());
-        InteracaoUsuario interacaoUsuario = montarInteracaoUsuario(event);
+        logger.debug("Antes sincronização: {}", interacoesUsuarios);
+        montarInteracaoUsuario(event);
         boolean isNovaInteracao = interacoesUsuarios.isNovaInteracao(interacaoUsuario);
         interacoesUsuarios.adicionar(interacaoUsuario);
-        logger.debug("Depois sincronização: {}", interacoesUsuarios.toString());
+        logger.debug("Depois sincronização: {}", interacoesUsuarios);
 
         try {
             if (isNovaInteracao) {
@@ -115,16 +118,20 @@ public class GerenciadorDeInteracaoUsuario {
         }
     }
 
-    private InteracaoUsuario montarInteracaoUsuario(Event event) {
-        InteracaoUsuario interacaoUsuario = new InteracaoUsuario();
-        interacaoUsuario.setSenderId(event.senderId());
-        interacaoUsuario.setRecipientId(event.recipientId());
-        interacaoUsuario.setTimestamp(event.timestamp());
-        logger.debug("montarInteracaoUsuario: {}", interacaoUsuario.toString());
-        return interacaoUsuario;
+    private void montarInteracaoUsuario(Event event) {
+        interacaoUsuario = interacoesUsuarios.get(event.senderId());
+        if (interacaoUsuario == null) {
+            interacaoUsuario = new InteracaoUsuario();
+            interacaoUsuario.setSenderId(event.senderId());
+            interacaoUsuario.setRecipientId(event.recipientId());
+            interacaoUsuario.setTimestamp(event.timestamp());
+            logger.debug("Nova interação de usuário.");
+        }
+        logger.debug("montarInteracaoUsuario: {}", interacaoUsuario);
     }
 
     private void enviarApresentacaoInicial(String recipientId) throws MessengerApiException, MessengerIOException, MalformedURLException {
+/*
         final List<Button> buttons = Arrays.asList(
                 PostbackButton.create("Denúncia", "DEVELOPER_DEFINED_PAYLOAD"),
 //                PostbackButton.create("Reclamação", "DEVELOPER_DEFINED_PAYLOAD"),
@@ -146,6 +153,16 @@ public class GerenciadorDeInteracaoUsuario {
         final TemplateMessage templateMessage = TemplateMessage.create(buttonTemplate);
         final MessagePayload messagePayload = MessagePayload.create(recipientId, MessagingType.RESPONSE, templateMessage);
         this.messenger.send(messagePayload);
+*/
+
+        try {
+            EtapaTipoManifestacao etapaInicial = EtapaTipoManifestacaoBuilder.getEtapaInicial();
+            etapaInicial.getTipoInteracao().processar(interacaoUsuario.getSenderId(), etapaInicial.getDescricao(), etapaInicial.getOpcoes());
+            interacaoUsuario.setUltimaEtapaInteracaoProcessada(etapaInicial);
+        } catch (MessengerApiException | MessengerIOException e) {
+            logger.error("Ocorreu um erro ao enviar a mensagem inicial da interação.", e);
+        }
+
 
 //        List<Element> elementos = new ArrayList<>();
 //        elementos.add(Element.create("Denúncia",

@@ -34,7 +34,7 @@ public class EtapaTipoManifestacaoBuilder {
                         criarElementoComBotaoPostback(ELOGIO.getDescricao(), empty(), of("linkElogio.png"), getBotaoRegistrar()),
                         criarElementoComBotaoPostback(SIMPLIFIQUE.getDescricao(), empty(), of("linkSimplifique.png"), getBotaoRegistrar())
                 )),
-                TipoInteracao.PERGUNTA_COM_SELECAO_DE_LISTA);
+                TipoInteracao.PERGUNTA_COM_SELECAO_DE_ELEMENTO_GENERICO);
     }
 
     public static EtapaTipoManifestacao getEtapaFinal() {

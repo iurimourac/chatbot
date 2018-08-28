@@ -46,6 +46,16 @@ public enum TipoInteracao {
             IntegracaoMessengerService.enviarMensagemDeLista(recipientId, ofNullable(texto),
                     opcoes.orElseThrow(() -> new IllegalArgumentException("A lista de elementos não foi informada.")));
         }
+    },
+
+    PERGUNTA_COM_SELECAO_DE_ELEMENTO_GENERICO {
+        @Override
+        public void processar(String recipientId, String texto, Optional<List> opcoes, Optional<String>... parametros)
+                throws MessengerApiException, MessengerIOException {
+            validarParametros(recipientId, texto, parametros);
+            IntegracaoMessengerService.enviarMensagemDeElementoGenerico(recipientId, ofNullable(texto),
+                    opcoes.orElseThrow(() -> new IllegalArgumentException("A lista de elementos não foi informada.")));
+        }
     };
 
 
