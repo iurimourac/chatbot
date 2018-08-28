@@ -3,6 +3,7 @@ package br.gov.cgu.chatboteouvteste.aplicacao;
 import br.gov.cgu.chatboteouvteste.negocio.EtapaTipoManifestacao;
 import br.gov.cgu.chatboteouvteste.negocio.InteracaoUsuario;
 import br.gov.cgu.chatboteouvteste.negocio.TipoManifestacao;
+import br.gov.cgu.chatboteouvteste.negocio.TipoManifestacaoInvalidoException;
 import com.github.messenger4j.Messenger;
 import com.github.messenger4j.common.WebviewHeightRatio;
 import com.github.messenger4j.exception.MessengerApiException;
@@ -44,10 +45,7 @@ import org.springframework.stereotype.Service;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 import static com.github.messenger4j.send.message.richmedia.RichMediaAsset.Type.*;
 import static java.util.Optional.empty;
@@ -96,9 +94,9 @@ public class GerenciadorDeInteracaoUsuario {
                 } else if (event.isPostbackEvent()) {
                     // [CGU]
                     if (interacaoUsuario.isNovoEventoUsuario()) {
-                        logger.debug("");
                         interacaoUsuario.setTipoManifestacao(TipoManifestacao.get(event.asPostbackEvent().title()));
                     }
+                    processarProximaEtapa();
                     handlePostbackEvent(event.asPostbackEvent());
                 } else if (event.isAccountLinkingEvent()) {
                     handleAccountLinkingEvent(event.asAccountLinkingEvent());
@@ -163,6 +161,29 @@ public class GerenciadorDeInteracaoUsuario {
             interacaoUsuario.setUltimaEtapaInteracaoProcessada(etapaInicial);
         } catch (MessengerApiException | MessengerIOException e) {
             logger.error("Ocorreu um erro ao enviar a mensagem inicial da interação.", e);
+        }
+    }
+
+    private void processarProximaEtapa(Optional<String>... parametros) throws MessengerApiException, MessengerIOException {
+        validarDadosDeInteracaoUsuario();
+
+        EtapaTipoManifestacao etapa = interacaoUsuario.getTipoManifestacao().getProximaEtapa(interacaoUsuario.getUltimaEtapaInteracaoProcessada().getId());
+        etapa.processar(interacaoUsuario.getSenderId(), Optional.empty());
+        interacaoUsuario.setUltimaEtapaInteracaoProcessada(etapa);
+
+        if (interacaoUsuario.isTodasEtapaProcessadas()) {
+            etapa = EtapaTipoManifestacaoBuilder.getEtapaFinal();
+            etapa.processar(interacaoUsuario.getSenderId());
+        }
+    }
+
+    private void validarDadosDeInteracaoUsuario() {
+        if (interacaoUsuario.getTipoManifestacao() == null) {
+            throw new TipoManifestacaoInvalidoException("Tipo de manifestação não definido na interação!");
+        }
+
+        if (interacaoUsuario.getUltimaEtapaInteracaoProcessada() == null) {
+            throw new TipoManifestacaoInvalidoException("Etapa do tipo de manifestação não definida na interação!");
         }
     }
 

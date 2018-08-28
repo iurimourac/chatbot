@@ -38,6 +38,7 @@ import static java.util.Optional.of;
 public class IntegracaoMessengerService {
 
     private static final String TIPO_PAYLOAD_BOTAO_POSTBACK = "DEVELOPER_DEFINED_PAYLOAD";
+    private static final String TIPO_PAYLOAD_SELECAO_TIPO_MANIFESTACAO = "SELECAO_TIPO_MANIFESTACAO";
     private static final String TIPO_PAYLOAD_MENSAGEM_TEXTO = "DEVELOPER_DEFINED_METADATA";
 
     private static String urlImagensAplicacao;
