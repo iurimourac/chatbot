@@ -41,6 +41,6 @@ public class InteracoesUsuarios {
     }
 
     public void remover(InteracaoUsuario interacaoUsuario) {
-        interacoes.remove(interacaoUsuario);
+        interacoes.remove(interacaoUsuario.getSenderId());
     }
 }

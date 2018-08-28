@@ -182,10 +182,11 @@ public class GerenciadorDeInteracaoUsuario {
         interacaoUsuario.setUltimaEtapaInteracaoProcessada(etapa);
 
         if (interacaoUsuario.isTodasEtapaProcessadas()) {
-            logger.debug("Todas as etapas foram processadas. Processando a etapa final...");
+            logger.debug("Todas as etapas foram processadas. Processando a etapa final... {}", interacoesUsuarios);
             etapa = EtapaTipoManifestacaoBuilder.getEtapaFinal();
             etapa.processar(interacaoUsuario.getSenderId());
             interacoesUsuarios.remover(interacaoUsuario);
+            logger.debug("Interacao de usuario removida. {}", interacoesUsuarios);
         }
     }
 
