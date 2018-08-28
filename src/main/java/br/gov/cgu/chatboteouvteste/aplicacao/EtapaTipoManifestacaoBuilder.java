@@ -27,12 +27,18 @@ public class EtapaTipoManifestacaoBuilder {
                 "Por aqui, posso te ajudar a registrar uma manifestação para as Ouvidorias do Governo Federal. " +
                 "Gostaria de registrar qual tipo?",
                 of(Arrays.asList(
-                        criarElementoComBotaoPostback(DENUNCIA.getDescricao(), empty(), of("linkDenuncia.png"), getBotaoRegistrar()),
-                        criarElementoComBotaoPostback(RECLAMACAO.getDescricao(), empty(), of("linkReclamacao.png"), getBotaoRegistrar()),
-                        criarElementoComBotaoPostback(SOLICITACAO.getDescricao(), empty(), of("linkSolicitacao.png"), getBotaoRegistrar()),
-                        criarElementoComBotaoPostback(SUGESTAO.getDescricao(), empty(), of("linkSugestao.png"), getBotaoRegistrar()),
-                        criarElementoComBotaoPostback(ELOGIO.getDescricao(), empty(), of("linkElogio.png"), getBotaoRegistrar()),
-                        criarElementoComBotaoPostback(SIMPLIFIQUE.getDescricao(), empty(), of("linkSimplifique.png"), getBotaoRegistrar())
+                        criarElementoComBotaoPostback(DENUNCIA.getDescricao(), empty(), of("linkDenuncia.png"),
+                                getBotaoRegistrar(DENUNCIA.getDescricao())),
+                        criarElementoComBotaoPostback(RECLAMACAO.getDescricao(), empty(), of("linkReclamacao.png"),
+                                getBotaoRegistrar(RECLAMACAO.getDescricao())),
+                        criarElementoComBotaoPostback(SOLICITACAO.getDescricao(), empty(), of("linkSolicitacao.png"),
+                                getBotaoRegistrar(SOLICITACAO.getDescricao())),
+                        criarElementoComBotaoPostback(SUGESTAO.getDescricao(), empty(), of("linkSugestao.png"),
+                                getBotaoRegistrar(SUGESTAO.getDescricao())),
+                        criarElementoComBotaoPostback(ELOGIO.getDescricao(), empty(), of("linkElogio.png"),
+                                getBotaoRegistrar(ELOGIO.getDescricao())),
+                        criarElementoComBotaoPostback(SIMPLIFIQUE.getDescricao(), empty(), of("linkSimplifique.png"),
+                                getBotaoRegistrar(SIMPLIFIQUE.getDescricao()))
                 )),
                 TipoInteracao.PERGUNTA_COM_SELECAO_DE_ELEMENTO_GENERICO);
     }
@@ -44,7 +50,7 @@ public class EtapaTipoManifestacaoBuilder {
                 TipoInteracao.PERGUNTA_COM_SELECAO_DE_BOTAO);
     }
 
-    private static Optional<List<PostbackButton>> getBotaoRegistrar() {
-        return of(criarBotoesPostback(singletonList("Registrar")));
+    private static Optional<List<PostbackButton>> getBotaoRegistrar(String tipo) {
+        return of(criarBotoesPostback(singletonList("Registrar " + tipo)));
     }
 }
