@@ -159,13 +159,16 @@ public class GerenciadorDeInteracaoUsuario {
         }
 
         if (interacaoUsuario.isNovoEventoUsuario()) {
+            logger.debug("Nova interação de usuário");
             interacaoUsuario.setTipoManifestacao(tipoManifestacao);
         } else if (postbackEvent.payload().get().equals(TipoInteracao.TIPO_PAYLOAD_SELECAO_TIPO_MANIFESTACAO)) {
+            logger.debug("Seleção de novo tipo de manifestação. Usuário já tinha selecionado outra antes.");
             interacaoUsuario.setTipoManifestacao(tipoManifestacao);
             interacaoUsuario.setUltimaEtapaInteracaoProcessada(EtapaTipoManifestacaoBuilder.getEtapaInicial());
         }
     }
     private void processarProximaEtapa(Optional<String>... parametros) throws MessengerApiException, MessengerIOException {
+        logger.debug("Processando próxima etapa...");
         validarDadosDeInteracaoUsuario();
 
         EtapaTipoManifestacao etapa = interacaoUsuario.getTipoManifestacao().getProximaEtapa(interacaoUsuario.getUltimaEtapaInteracaoProcessada().getId());
@@ -173,6 +176,7 @@ public class GerenciadorDeInteracaoUsuario {
         interacaoUsuario.setUltimaEtapaInteracaoProcessada(etapa);
 
         if (interacaoUsuario.isTodasEtapaProcessadas()) {
+            logger.debug("Todas as etapas foram processadas. Processando a etapa final...");
             etapa = EtapaTipoManifestacaoBuilder.getEtapaFinal();
             etapa.processar(interacaoUsuario.getSenderId());
         }
@@ -261,7 +265,8 @@ public class GerenciadorDeInteracaoUsuario {
                     break;
 
                 default:
-                    sendTextMessage(senderId, messageText);
+                    logger.debug("Default text message {}", messageText);
+//                    sendTextMessage(senderId, messageText);
             }
         } catch (MessengerApiException | MessengerIOException | MalformedURLException e) {
             handleSendException(e);
@@ -463,7 +468,7 @@ public class GerenciadorDeInteracaoUsuario {
         final Instant timestamp = event.timestamp();
         logger.debug("timestamp: {}", timestamp);
         logger.info("Received postback for user '{}' and page '{}' with payload '{}' and title '{}' at '{}'", senderId, senderId, payload, title, timestamp);
-        sendTextMessage(senderId, "Postback event tapped");
+//        sendTextMessage(senderId, "Postback event tapped");
     }
 
     private void sendTextMessage(String recipientId, String text) {
